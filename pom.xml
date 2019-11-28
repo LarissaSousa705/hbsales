@@ -65,6 +65,13 @@
         </dependency>
 
         <dependency>
+            <groupId>com.opencsv</groupId>
+            <artifactId>opencsv</artifactId>
+            <version>4.5</version>
+        </dependency>
+
+
+        <dependency>
             <groupId>com.microsoft.sqlserver</groupId>
             <artifactId>mssql-jdbc</artifactId>
             <version>7.4.1.jre8</version>
@@ -91,6 +98,7 @@
             </plugin>
         </plugins>
     </build>
+
 
     <repositories>
         <repository>

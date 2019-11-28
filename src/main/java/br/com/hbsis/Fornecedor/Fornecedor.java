@@ -28,16 +28,7 @@ class Fornecedor {
     private String email;
     @Column(name = "cnpj", unique = false, updatable = false, length = 11)
     private String cnpj;
-   // @OneToMany(mappedBy = "fornecedor",targetEntity = Produtos.class ,fetch = FetchType.LAZY,cascade =CascadeType.ALL)
-  //  private List<Produtos> categorias;
 
-  //  public List<Produtos> getCategorias() {
-  //      return categorias;
-  //  }
-
-  //  public void setCategorias(List<Produtos> categorias) {
-  //      this.categorias = categorias;
-  //  }
 
     public String getTelefone() {return telefone; }
 

@@ -1,17 +1,18 @@
 package br.com.hbsis.Produtos;
 
+import br.com.hbsis.Fornecedor.Fornecedor;
+
 public class ProdutosDTO {
 
     private Long id;
     private String nome_categoria;
     private Long fornecedor_id;
+    private Long cod_categoria;
 
-    public Long getFornecedor_id() {
-        return fornecedor_id;
+    public ProdutosDTO(){
     }
 
-    public void setFornecedor_id(Long fornecedor_id) {
-        this.fornecedor_id = fornecedor_id;
+    public ProdutosDTO(Long fornecedor_id, Long cod_categoria, String nome_categoria) {
     }
 
     public Long getId() {
@@ -30,24 +31,36 @@ public class ProdutosDTO {
         this.nome_categoria = nome_categoria;
     }
 
-    public ProdutosDTO(){
+    public Long getFornecedor_id() {
+        return fornecedor_id;
     }
 
-    public ProdutosDTO(Long id, String fornecedor_categoria, String nome_categoria, String cod_categoria){
-        this.id = id;
-        this.nome_categoria = nome_categoria;
+    public void setFornecedor_id(Long fornecedor_id) {
         this.fornecedor_id = fornecedor_id;
     }
 
-    public ProdutosDTO( Long fornecedor_id, String nome_categoria){
+    public Long getCod_categoria() {
+        return cod_categoria;
     }
+
+    public void setCod_categoria(Long cod_categoria) {
+        this.cod_categoria = cod_categoria;
+    }
+
+    public ProdutosDTO(Long id, Long cod_categoria, String fornecedor_categoria, String nome_categoria){
+        this.id = id;
+        this.nome_categoria = nome_categoria;
+        this.fornecedor_id = fornecedor_id;
+        this.cod_categoria = cod_categoria;
+    }
+
 
     public static ProdutosDTO of(Produtos Produtos){
         return new ProdutosDTO(
                 Produtos.getFornecedor_id(),
+                Produtos.getCod_categoria(),
                 Produtos.getNome_categoria()
-
-        );
+                );
     }
 
     @Override
@@ -56,6 +69,7 @@ public class ProdutosDTO {
                 "id=" + id +
                 ", fornecedor_id='" + fornecedor_id + '\'' +
                 ", nome_categoria='" + nome_categoria + '\'' +
+                ", cod_categoria='" + cod_categoria + '\'' +
                 '}';
     }
     }
