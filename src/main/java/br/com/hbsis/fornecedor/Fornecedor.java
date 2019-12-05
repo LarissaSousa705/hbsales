@@ -1,25 +1,21 @@
-package br.com.hbsis.Fornecedor;
-
-import br.com.hbsis.Produtos.Produtos;
+package br.com.hbsis.fornecedor;
 
 import javax.persistence.*;
-import java.util.List;
 
 /**
  * Classe responsável pelo mapeamento da entidade do banco de dados
  */
 @Entity
 @Table(name = "seg_fornecedor")
-public
-class Fornecedor {
+public class Fornecedor {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(name = "razao_social", unique = false, nullable = false, length = 200)
-    private String razao_social;
+    private String razaoSocial;
     @Column(name = "nome_fantasia", unique = false, length = 50)
-    private String nome_fantasia;
+    private String nomeFantasia;
     @Column(name = "endereco", unique = false, updatable = false, length = 200)
     private String endereco;
     @Column(name = "telefone", unique = false, updatable = false, length = 11)
@@ -29,6 +25,10 @@ class Fornecedor {
     @Column(name = "cnpj", unique = false, updatable = false, length = 11)
     private String cnpj;
 
+
+    public Fornecedor() {
+        return;
+    }
 
     public String getTelefone() {return telefone; }
 
@@ -40,13 +40,13 @@ class Fornecedor {
 
     public Long getId() {return id; }
 
-    public String getRazao_social() { return razao_social; }
+    public String getRazaoSocial() { return razaoSocial; }
 
-    public void setRazao_social(String razao_social) { this.razao_social = razao_social; }
+    public void setRazaoSocial(String razaoSocial) { this.razaoSocial = razaoSocial; }
 
-    public String getNome_fantasia() { return nome_fantasia; }
+    public String getNomeFantasia() { return nomeFantasia; }
 
-    public void setNome_fantasia(String nome_fantasia) { this.nome_fantasia = nome_fantasia; }
+    public void setNomeFantasia(String nomeFantasia) { this.nomeFantasia = nomeFantasia; }
 
     public String getEndereco() { return endereco; }
 
@@ -56,14 +56,19 @@ class Fornecedor {
 
     public void setEmail(String email) { this.email = email; }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+
     @Override
     public String toString() {
-        return "br.com.hbsis.Fornecedor{" +
+        return "Fornecedor{" +
                 "id=" + id +
-                ", razao='" + razao_social + '\'' +
-                ", nomeFantasia='" + nome_fantasia + '\'' +
+                ", razaoSocial='" + razaoSocial + '\'' +
+                ", nomeFantasia='" + nomeFantasia + '\'' +
                 ", endereco='" + endereco + '\'' +
-                ", teleofone='" + telefone + '\'' +
+                ", telefone='" + telefone + '\'' +
                 ", email='" + email + '\'' +
                 ", cnpj='" + cnpj + '\'' +
                 '}';

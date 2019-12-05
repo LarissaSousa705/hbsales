@@ -1,2 +1,2 @@
-ALTER TABLE "dbo"."seg_produtos"
- ADD UNIQUE ("nome_categoria",  "fornecedor_id");
+ALTER TABLE "dbo"."seg_categorias"
+ ADD UNIQUE ("nome_categoria",  "fornecedor04");

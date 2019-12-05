@@ -1,8 +1,7 @@
-package br.com.hbsis.Produtos;
+package br.com.hbsis.categoria;
 
 
-import br.com.hbsis.Fornecedor.Fornecedor;
-import com.opencsv.bean.CsvBindByName;
+import br.com.hbsis.fornecedor.Fornecedor;
 import com.opencsv.bean.CsvBindByPosition;
 
 import javax.persistence.*;
@@ -11,26 +10,26 @@ import javax.persistence.*;
  * Classe responsável pelo mapeamento da entidade do banco de dados
  */
 @Entity
-@Table(name = "seg_produtos")
+@Table(name = "seg_categorias")
 public
-class Produtos {
+class Categorias {
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @CsvBindByPosition(position = 0)
     private Long id;
 
-    @Column(name = "nome_categoria", unique = false,nullable = false, length = 500)
+    @Column(name = "nome_categoria", unique = false,nullable = false, length = 5000)
     @CsvBindByPosition(position = 2)
     private String nome_categoria;
     @CsvBindByPosition(position = 1)
     @Column(name = "cod_categoria", unique = false, nullable = false, length = 200)
     private Long cod_categoria;
-    @CsvBindByPosition(position = 3)
-   // @ManyToOne
-    @JoinColumn(name = "Fornecedor_id", referencedColumnName = "id")
-    private Long fornecedor_id;
 
+    @ManyToOne
+    @JoinColumn(name = "fornecedor04", referencedColumnName = "id")
+    private Fornecedor fornecedor04;
 
     public Long getId() {
         return id;
@@ -56,20 +55,26 @@ class Produtos {
         this.cod_categoria = cod_categoria;
     }
 
-    public Long getFornecedor_id() {
-        return fornecedor_id;
+    public Fornecedor getFornecedor04() {
+        return fornecedor04;
     }
 
-    public void setFornecedor_id(Long fornecedor_id) {
-        this.fornecedor_id = fornecedor_id;
+    public void setFornecedor04(Fornecedor fornecedor04) {
+        this.fornecedor04 = fornecedor04;
+    }
+
+    public Long getFornecedorId(){
+        return fornecedor04.getId();
     }
 
     @Override
     public String toString() {
-        return "br.com.hbsis.Produtos{" +
-                "fornecedor_id=" + fornecedor_id +
+        return "Categorias{" +
+                "id=" + id +
                 ", nome_categoria='" + nome_categoria + '\'' +
-                ", cod_categoria='" + cod_categoria + '\'' +
+                ", cod_categoria=" + cod_categoria +
+                ", fornecedor04=" + fornecedor04 +
                 '}';
     }
+
 }

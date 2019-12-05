@@ -9,3 +9,4 @@ create table seg_fornecedor
     cnpj          VARCHAR(11)            NOT NULL
     );
     create unique index ix_seg_fornecedor_07 on seg_fornecedor (cnpj asc);
+

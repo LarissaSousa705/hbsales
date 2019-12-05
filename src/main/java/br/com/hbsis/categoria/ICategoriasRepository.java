@@ -1,4 +1,4 @@
-package br.com.hbsis.Produtos;
+package br.com.hbsis.categoria;
 
 
 
@@ -9,5 +9,6 @@ import org.springframework.stereotype.Repository;
  * Classe responsável pela comunciação com o banco de dados
  */
 @Repository
-public interface IProdutosRepository extends JpaRepository<Produtos, Long> {
+public interface ICategoriasRepository extends JpaRepository<Categorias, Long> {
+
 }
