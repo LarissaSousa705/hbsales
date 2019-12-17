@@ -51,4 +51,7 @@ public class FornecedorRest {
 
         this.fornecedorService.delete(id);
     }
+
+
+
 }

@@ -2,18 +2,20 @@ package br.com.hbsis.linhacategoria;
 
 public class LinhaCategoriaDTO {
     private Long Id;
-    private Long codLinhaCategoria;
+    private String codLinhaCategoria;
     private String categoriaLinha;
-    private String nomeCategoria;
     private  Long idCategoriaProdutos;
 
 
-    public LinhaCategoriaDTO(Long id, Long codLinhaCategoria, String categoriaLinha, String nomeCategoria, Long idCategoriaProdutos) {
+    public LinhaCategoriaDTO(Long id, String codLinhaCategoria, String categoriaLinha, Long idCategoriaProdutos) {
         Id = id;
         this.codLinhaCategoria = codLinhaCategoria;
         this.categoriaLinha = categoriaLinha;
-        this.nomeCategoria = nomeCategoria;
         this.idCategoriaProdutos = idCategoriaProdutos;
+    }
+
+    public LinhaCategoriaDTO() {
+
     }
 
     public static LinhaCategoriaDTO of(LinhaCategoria linhaCategoria){
@@ -21,10 +23,10 @@ public class LinhaCategoriaDTO {
             linhaCategoria.getId(),
                 linhaCategoria.getCodLinhaCategoria(),
                 linhaCategoria.getCategoriaLinha(),
-                linhaCategoria.getNomeCategoria(),
-                linhaCategoria.getIdCategoriaProdutos()
+                linhaCategoria.getIdCategoriaProdutos().getId()
         );
     }
+
 
     public Long getId() {
         return Id;
@@ -34,11 +36,11 @@ public class LinhaCategoriaDTO {
         Id = id;
     }
 
-    public Long getCodLinhaCategoria() {
+    public String getCodLinhaCategoria() {
         return codLinhaCategoria;
     }
 
-    public void setCodLinhaCategoria(Long codLinhaCategoria) {
+    public void setCodLinhaCategoria(String codLinhaCategoria) {
         this.codLinhaCategoria = codLinhaCategoria;
     }
 
@@ -50,13 +52,6 @@ public class LinhaCategoriaDTO {
         this.categoriaLinha = categoriaLinha;
     }
 
-    public String getNomeCategoria() {
-        return nomeCategoria;
-    }
-
-    public void setNomeCategoria(String nomeCategoria) {
-        this.nomeCategoria = nomeCategoria;
-    }
 
     public Long getIdCategoriaProdutos() {
         return idCategoriaProdutos;
@@ -70,9 +65,8 @@ public class LinhaCategoriaDTO {
     public String toString() {
         return "LinhaCategoriaDTO{" +
                 "Id=" + Id +
-                ", codLinhaCategoria=" + codLinhaCategoria +
+                ", codLinhaCategoria='" + codLinhaCategoria + '\'' +
                 ", categoriaLinha='" + categoriaLinha + '\'' +
-                ", nomeCategoria='" + nomeCategoria + '\'' +
                 ", idCategoriaProdutos=" + idCategoriaProdutos +
                 '}';
     }

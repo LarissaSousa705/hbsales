@@ -1,0 +1,1 @@
+ALTER TABLE dbo.linha_categoria ADD id_categoria_produtos  BIGINT  REFERENCES seg_categorias(id) NOT NULL

@@ -4,14 +4,14 @@ public class CategoriasDTO {
 
     private Long id;
     private String nomeCategoria;
-    private Long codCategoria;
+    private String codCategoria;
     private Long fornecedor04;
 
     public CategoriasDTO(){
     }
 
 
-    public CategoriasDTO(Long id, String nomeCategoria, Long codCategoria, Long fornecedor04) {
+    public CategoriasDTO(Long id, String nomeCategoria, String codCategoria, Long fornecedor04) {
         this.id = id;
         this.nomeCategoria = nomeCategoria;
         this.codCategoria = codCategoria;
@@ -21,8 +21,8 @@ public class CategoriasDTO {
     public static CategoriasDTO of(Categorias categorias) {
         return new  CategoriasDTO(
                 categorias.getId(),
-                categorias.getNome_categoria(),
-                categorias.getCod_categoria(),
+                categorias.getNomeCategoria(),
+                categorias.getCodCategoria(),
                 categorias.getFornecedor04().getId()
         );
     }
@@ -51,15 +51,13 @@ public class CategoriasDTO {
         this.nomeCategoria = nomeCategoria;
     }
 
-
-    public Long getCodCategoria() {
+    public String getCodCategoria() {
         return codCategoria;
     }
 
-    public void setCodCategoria(Long codCategoria) {
+    public void setCodCategoria(String codCategoria) {
         this.codCategoria = codCategoria;
     }
-
 
     @Override
     public String toString() {

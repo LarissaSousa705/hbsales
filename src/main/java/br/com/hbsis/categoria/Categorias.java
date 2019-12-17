@@ -20,12 +20,12 @@ class Categorias {
     @CsvBindByPosition(position = 0)
     private Long id;
 
-    @Column(name = "nome_categoria", unique = false,nullable = false, length = 5000)
+    @Column(name = "nome_categoria", unique = false,nullable = false, length = 50)
     @CsvBindByPosition(position = 2)
-    private String nome_categoria;
+    private String nomeCategoria;
     @CsvBindByPosition(position = 1)
-    @Column(name = "cod_categoria", unique = false, nullable = false, length = 200)
-    private Long cod_categoria;
+    @Column(name = "cod_categoria", unique = false, nullable = false, length = 50)
+    private String codCategoria;
 
     @ManyToOne
     @JoinColumn(name = "fornecedor04", referencedColumnName = "id")
@@ -39,20 +39,20 @@ class Categorias {
         this.id = id;
     }
 
-    public String getNome_categoria() {
-        return nome_categoria;
+    public String getNomeCategoria() {
+        return nomeCategoria;
     }
 
-    public void setNome_categoria(String nome_categoria) {
-        this.nome_categoria = nome_categoria;
+    public void setNomeCategoria(String nomeCategoria) {
+        this.nomeCategoria = nomeCategoria;
     }
 
-    public Long getCod_categoria() {
-        return cod_categoria;
+    public String getCodCategoria() {
+        return codCategoria;
     }
 
-    public void setCod_categoria(Long cod_categoria) {
-        this.cod_categoria = cod_categoria;
+    public void setCodCategoria(String codCategoria) {
+        this.codCategoria = codCategoria;
     }
 
     public Fornecedor getFornecedor04() {
@@ -63,18 +63,13 @@ class Categorias {
         this.fornecedor04 = fornecedor04;
     }
 
-    public Long getFornecedorId(){
-        return fornecedor04.getId();
-    }
-
     @Override
     public String toString() {
         return "Categorias{" +
                 "id=" + id +
-                ", nome_categoria='" + nome_categoria + '\'' +
-                ", cod_categoria=" + cod_categoria +
+                ", nome_categoria='" + nomeCategoria + '\'' +
+                ", cod_categoria=" + codCategoria +
                 ", fornecedor04=" + fornecedor04 +
                 '}';
     }
-
 }

@@ -31,7 +31,7 @@ public class FornecedorService {
         LOGGER.debug("{} Fornecedor: {}", FornecedorService.class.getName(), fornecedorDTO);
 
         Fornecedor Fornecedor = new Fornecedor();
-        Fornecedor.setRazaoSocial(fornecedorDTO.getRazaoSocial());
+        Fornecedor.setRazao(fornecedorDTO.getRazao());
         Fornecedor.setCnpj(fornecedorDTO.getCnpj());
         Fornecedor.setNomeFantasia(fornecedorDTO.getNomeFantasia());
         Fornecedor.setEndereco(fornecedorDTO.getEndereco());
@@ -50,7 +50,7 @@ public class FornecedorService {
             throw new IllegalArgumentException("UsuarioDTO não deve ser nulo");
         }
 
-        if (StringUtils.isEmpty(FornecedorDTO.getRazaoSocial())) {
+        if (StringUtils.isEmpty(FornecedorDTO.getRazao())) {
             throw new IllegalArgumentException("Razão Social não deve ser nula/vazia");
         }
 
@@ -112,12 +112,14 @@ public class FornecedorService {
             LOGGER.debug("Payload: {}", FornecedorDTO);
             LOGGER.debug("br.com.hbsis.Fornecedor Existente: {}", FornecedorExistente);
 
-            FornecedorExistente.setRazaoSocial(FornecedorDTO.getRazaoSocial());
+
+            FornecedorExistente.setRazao(FornecedorDTO.getRazao());
             FornecedorExistente.setCnpj(FornecedorDTO.getCnpj());
             FornecedorExistente.setNomeFantasia(FornecedorDTO.getNomeFantasia());
             FornecedorExistente.setEndereco(FornecedorDTO.getEndereco());
             FornecedorExistente.setTelefone(FornecedorDTO.getTelefone());
             FornecedorExistente.setEmail(FornecedorDTO.getEmail());
+
 
             FornecedorExistente = this.iFornecedorRepository.save(FornecedorExistente);
 

@@ -1,10 +1,9 @@
 package br.com.hbsis.produtos;
 
-import br.com.hbsis.categoria.Categorias;
 import br.com.hbsis.linhacategoria.LinhaCategoria;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.util.Date;
 
 
 @Entity
@@ -14,19 +13,23 @@ public class Produtos {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "nome_produto", unique = false, nullable = false, length = 5000)
+    @Column(name = "cod_produto", unique = false, nullable = false, length = 10)
+    private String codProduto;
+    @Column(name = "nome_produto", unique = false, nullable = false, length = 200)
     private String nomeProduto;
     @Column(name = "preco", unique = false, nullable = false)
     private double preco;
-    @ManyToOne
-    @JoinColumn(name = "linha_categoria_produto", referencedColumnName = "id")
-    private LinhaCategoria linhaCategoria;
     @Column(name = "unidade_caixa", unique = false, nullable = false)
-    private double unidadeCaixa;
+    private Long unidadeCaixa;
     @Column(name = "peso_unidade", unique = false, nullable = false)
     private double pesoUnidade;
-    @Column(name = "validade", unique = false, nullable = false, length = 20)
-    private LocalDateTime validade;
+    @Column(name = "validade", unique = false, nullable = false)
+    private Date validade;
+    @Column(name = "medida_peso", unique = false, nullable = false, length = 50)
+    private String medidaPeso;
+    @ManyToOne
+    @JoinColumn(name = "linha_categoria_produto", referencedColumnName = "id")
+    private LinhaCategoria linhaCategoriaProduto;
 
     public Long getId() {
         return id;
@@ -34,6 +37,14 @@ public class Produtos {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getCodProduto() {
+        return codProduto;
+    }
+
+    public void setCodProduto(String codProduto) {
+        this.codProduto = codProduto;
     }
 
     public String getNomeProduto() {
@@ -52,19 +63,11 @@ public class Produtos {
         this.preco = preco;
     }
 
-    public LinhaCategoria getLinhaCategoria() {
-        return linhaCategoria;
-    }
-
-    public void setLinhaCategoria(LinhaCategoria linhaCategoria) {
-        this.linhaCategoria = linhaCategoria;
-    }
-
-    public double getUnidadeCaixa() {
+    public Long getUnidadeCaixa() {
         return unidadeCaixa;
     }
 
-    public void setUnidadeCaixa(double unidadeCaixa) {
+    public void setUnidadeCaixa(Long unidadeCaixa) {
         this.unidadeCaixa = unidadeCaixa;
     }
 
@@ -76,24 +79,44 @@ public class Produtos {
         this.pesoUnidade = pesoUnidade;
     }
 
-    public LocalDateTime getValidade() {
+    public Date getValidade() {
         return validade;
     }
 
-    public void setValidade(LocalDateTime validade) {
+    public void setValidade(Date validade) {
         this.validade = validade;
+    }
+
+    public String getMedidaPeso() {
+        return medidaPeso;
+    }
+
+    public void setMedidaPeso(String medidaPeso) {
+        this.medidaPeso = medidaPeso;
+    }
+
+    public LinhaCategoria getLinhaCategoriaProduto() {
+        return linhaCategoriaProduto;
+    }
+
+    public void setLinhaCategoriaProduto(LinhaCategoria linhaCategoriaProduto) {
+        this.linhaCategoriaProduto = linhaCategoriaProduto;
     }
 
     @Override
     public String toString() {
         return "Produtos{" +
                 "id=" + id +
+                ", codProduto='" + codProduto + '\'' +
                 ", nomeProduto='" + nomeProduto + '\'' +
                 ", preco=" + preco +
-                ", linhaCategoria=" + linhaCategoria +
                 ", unidadeCaixa=" + unidadeCaixa +
                 ", pesoUnidade=" + pesoUnidade +
-                ", validade='" + validade + '\'' +
+                ", validade=" + validade +
+                ", medidaPeso='" + medidaPeso + '\'' +
+                ", linhaCategoria=" + linhaCategoriaProduto +
                 '}';
     }
+
 }
+

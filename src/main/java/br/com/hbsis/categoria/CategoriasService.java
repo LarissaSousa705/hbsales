@@ -3,7 +3,9 @@ package br.com.hbsis.categoria;
 import br.com.hbsis.fornecedor.Fornecedor;
 import br.com.hbsis.fornecedor.FornecedorDTO;
 import br.com.hbsis.fornecedor.FornecedorService;
+import br.com.hbsis.fornecedor.IFornecedorRepository;
 import com.opencsv.*;
+import freemarker.template.utility.StringUtil;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,10 +14,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.BufferedReader;
-import java.io.IOException;
+import javax.swing.text.MaskFormatter;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -30,39 +32,40 @@ public class CategoriasService {
 
     private final ICategoriasRepository iCategoriasRepository;
     private final FornecedorService fornecedorService;
+    private final IFornecedorRepository iFornecedorRepository;
 
-    public CategoriasService(ICategoriasRepository iCategoriasRepository, FornecedorService fornecedorService) {
+
+    public CategoriasService(ICategoriasRepository iCategoriasRepository, FornecedorService fornecedorService, IFornecedorRepository iFornecedorRepository) throws ParseException {
         this.iCategoriasRepository = iCategoriasRepository;
         this.fornecedorService = fornecedorService;
-
-
+        this.iFornecedorRepository = iFornecedorRepository;
     }
 
     public CategoriasDTO save(CategoriasDTO categoriasDTO) {
-
-        //Fornecedor fornecedor = fornecedorService.findByIdFornecedor(categoriasDTO.getFornecedor04().get;
-
-        this.validate(categoriasDTO);
-
-
+        Optional<Fornecedor> fornecedorOptional = Optional.ofNullable(this.fornecedorService.findByIdFornecedor(categoriasDTO.getFornecedor04()));
 
         LOGGER.info("Salvando categorias");
         LOGGER.debug("br.com.hbsis.Categorias: {}", categoriasDTO);
 
-        //Optional<Fornecedor> fornecedorOptional = this.fornecedorService.findByIdFornecedor(categoriasDTO.getFornecedor04().get);
+        this.validate(categoriasDTO);
+        Categorias categorias = new Categorias();
 
-        Categorias Categorias = new Categorias();
+        String cnpjPronto = fornecedorOptional.get().getCnpj().substring(10,13);
 
 
-        Categorias.setCod_categoria(categoriasDTO.getCodCategoria());
-        Categorias.setNome_categoria(categoriasDTO.getNomeCategoria());
-        Categorias.setFornecedor04(fornecedorService.findByIdFornecedor(categoriasDTO.getFornecedor04()));
+        categorias.setFornecedor04(fornecedorService.findByIdFornecedor(categoriasDTO.getFornecedor04()));
+        categorias.setNomeCategoria(categoriasDTO.getNomeCategoria());
+        String codPronto3 =  "CAT" + cnpjPronto + codPronto5(categoriasDTO.getCodCategoria());
+        categorias.setCodCategoria(codPronto3);
 
-        Categorias = this.iCategoriasRepository.save(Categorias);
 
-        return categoriasDTO.of(Categorias);
+        categorias = this.iCategoriasRepository.save(categorias);
+
+        return categoriasDTO.of(categorias);
 
     }
+
+
 
     private void validate(CategoriasDTO CategoriasDTO) {
         LOGGER.info("Validando Categorias");
@@ -85,6 +88,15 @@ public class CategoriasService {
 
         throw new IllegalArgumentException(String.format("ID %s não existe", id));
     }
+    public Fornecedor findByIdF(Long id) {
+        Optional<Fornecedor> fornecedorOptional = this.iFornecedorRepository.findById(id);
+
+        if (fornecedorOptional.isPresent()) {
+            return Fornecedor.of(fornecedorOptional.get());
+        }
+
+        throw new IllegalArgumentException(String.format("ID %s não existe", id));
+    }
 
     public Categorias findByIdCategoria(Long id) {
         Optional<Categorias> CategoriasOptional = this.iCategoriasRepository.findById(id);
@@ -95,6 +107,16 @@ public class CategoriasService {
 
         throw new IllegalArgumentException(String.format("ID %s não existe", id));
     }
+    public Categorias findByCodCategoria(String cod) {
+        Optional<Categorias> CategoriasOptional = this.iCategoriasRepository.findByCodCategoria(cod);
+
+        if (CategoriasOptional.isPresent()) {
+            return CategoriasOptional.get();
+        }
+
+        throw new IllegalArgumentException(String.format("Cod %s não existe", cod));
+    }
+
 
     public CategoriasDTO update(CategoriasDTO categoriasDTO, Long id) {
         Optional<Categorias> categoriasExistenteOptional = this.iCategoriasRepository.findById(id);
@@ -107,8 +129,8 @@ public class CategoriasService {
             LOGGER.debug("br.com.hbsis.Categorias Existente: {}", categoriasExistente);
 
 
-            categoriasExistente.setCod_categoria(categoriasDTO.getCodCategoria());
-            categoriasExistente.setNome_categoria(categoriasDTO.getNomeCategoria());
+            categoriasExistente.setCodCategoria(categoriasDTO.getCodCategoria());
+            categoriasExistente.setNomeCategoria(categoriasDTO.getNomeCategoria());
             categoriasExistente.setFornecedor04(fornecedorService.findByIdFornecedor(categoriasDTO.getFornecedor04()));
 
             categoriasExistente = this.iCategoriasRepository.save(categoriasExistente);
@@ -140,12 +162,22 @@ public class CategoriasService {
                 .withLineEnd(CSVWriter.DEFAULT_LINE_END)
                 .build();
 
-        String headerCVS[] = {"id","cod_categoria" , "nome_categoria" ,"fornecedor04" };
+        String headerCVS[] = {"id","cod_categoria" , "nome_categoria" ,"fornecedor04", "razão social", "cnpj" };
         csvWriter.writeNext(headerCVS);
 
         for(Categorias linha : iCategoriasRepository.findAll()) {
-            csvWriter.writeNext(new String[]{ linha.getId().toString(), linha.getCod_categoria().toString(), linha.getNome_categoria(), linha.getFornecedor04().toString()});
+
+            String cnpj =linha.getFornecedor04().getCnpj();
+            MaskFormatter mask = new MaskFormatter("##.###.###/####-##");
+            mask.setValueContainsLiteralCharacters(false);
+            String cnpjMask = mask.valueToString(cnpj);
+
+            csvWriter.writeNext(new String[]{ linha.getId().toString(), linha.getCodCategoria(),
+                    linha.getNomeCategoria(), linha.getFornecedor04().getId().toString(),
+                    linha.getFornecedor04().getRazao(), cnpjMask});
         }
+
+
     }
     //import
     public List<Categorias> readAll(MultipartFile multipartFile) throws Exception {
@@ -159,31 +191,19 @@ public class CategoriasService {
                 String[] line2 = line[0].replaceAll("\"", "").split(";");
 
                 Categorias clas_categorias = new Categorias();
-                Fornecedor fornecedorCompleto = new Fornecedor();
                 FornecedorDTO fornecedorDTO = new FornecedorDTO();
+                Fornecedor fornecedor = new Fornecedor();
 
+                String cnpj =(line2[4]);
+                String razao = (line2[5]);
+
+                Fornecedor fornecedorCompleto = iFornecedorRepository.findByCnpj(cnpj);
+                clas_categorias.setFornecedor04(findByIdF(Long.parseLong(line2[3])));
                 clas_categorias.setId(Long.parseLong(line2[0]));
-                clas_categorias.setCod_categoria(Long.parseLong(line2[1]));
-                clas_categorias.setNome_categoria(line2[2]);
-                System.out.println("chegou aqui");
-           //     clas_categorias.setFornecedor04(List.class(line2[3]));
+                clas_categorias.setCodCategoria(line2[1]);
+                clas_categorias.setNomeCategoria(line2[2]);
 
-
-
-          //     clas_categorias.setFornecedor04(fornecedorService.findByIdFornecedor(toString(line2[3])));
-
-//               clas_categorias.setFornecedor04(fornecedorService.findByIdFornecedor(line2[3]));
-            //   clas_categorias.setFornecedor04(Long.parseLong(line2[3]));
-           //    clas_categorias.getFornecedor04((line2[3]).toString());
-           //     clas_categorias.setFornecedor04(line2[3]);
-           //     clas_categorias.setFornecedor04(fornecedorService.findByIdFornecedor(line2[3]));
-           //     clas_categorias.setFornecedor04(fornece);
-           //     clas_categorias.setFornecedor04(Long.parseLong(line2[3]));
-                //fornecedorDTO = fornecedorService.findByIdFornecedor(Long.parseLong(line2[3]));
-             //  clas_categorias.setFornecedor(Long.parseLong(line2[5]));
-            //    clas_categorias.setFornecedor04(line2[4]);
-
-           //     clas_categorias.setFornecedor(line2[3]);
+                cnpj.replaceAll("[^0-9]", "");
 
                 produtos.add(clas_categorias);
 
@@ -233,5 +253,10 @@ public class CategoriasService {
 
 
     }*/
+    public String codPronto5 (String cod){
+        cod = StringUtil.leftPad(cod, 3, "0");
+        return cod;
+
+    }
 
 }

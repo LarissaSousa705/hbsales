@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -54,8 +55,18 @@ public class ProdutosRest {
     //export
     @GetMapping("/export-csv-produtos")
     public void exportcsv(HttpServletResponse response) throws Exception{
-        produtosService.findAllExport(response);
+        produtosService.findAllExport96(response);
     }
 
+    //import
+    @PostMapping(value = "/import-csv-produtos")
+    public void importcsv(@RequestParam("file")MultipartFile multipartFileImport) throws Exception{
+        produtosService.readAllImport(multipartFileImport);
+    }
+    //import
+    @PutMapping("import-csv-produtos-fornecedor/{id}")
+    public void importcsva(@RequestParam("file")MultipartFile multipartFileProdutos, @PathVariable("id") Long id) throws Exception{
+        produtosService.findByIdsla(multipartFileProdutos, id);
 
+    }
 }

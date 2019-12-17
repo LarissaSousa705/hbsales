@@ -3,7 +3,7 @@ package br.com.hbsis.fornecedor;
 
 public class FornecedorDTO {
     private Long id;
-    private String razaoSocial;
+    private String razao;
     private String nomeFantasia;
     private String endereco;
     private String telefone;
@@ -16,7 +16,7 @@ public class FornecedorDTO {
     }
 
     public FornecedorDTO(Long id, String razaoSocial, String cnpj, String nomeFantasia, String endereco, String telefone, String email) {
-        this.razaoSocial = razaoSocial;
+        this.razao = razaoSocial;
         this.id = id;
         this.cnpj = cnpj;
         this.nomeFantasia = nomeFantasia;
@@ -28,7 +28,7 @@ public class FornecedorDTO {
     public static FornecedorDTO of(Fornecedor Fornecedor) {
         return new FornecedorDTO(
                 Fornecedor.getId(),
-                Fornecedor.getRazaoSocial(),
+                Fornecedor.getRazao(),
                 Fornecedor.getCnpj(),
                 Fornecedor.getNomeFantasia(),
                 Fornecedor.getEndereco(),
@@ -42,8 +42,8 @@ public class FornecedorDTO {
         this.id = id;
     }
 
-    public void setRazaoSocial(String razaoSocial) {
-        this.razaoSocial = razaoSocial;
+    public void setRazao(String razao) {
+        this.razao = razao;
     }
 
     public String getNomeFantasia() {
@@ -62,7 +62,7 @@ public class FornecedorDTO {
         return id;
     }
 
-    public String getRazaoSocial() {
+    public String getRazao() {
         return nomeFantasia;
     }
 
@@ -98,7 +98,7 @@ public class FornecedorDTO {
     public String toString() {
         return "br.com.hbsis.Fornecedor{" +
                 "id=" + id +
-                ", razao='" + razaoSocial + '\'' +
+                ", razao='" + razao + '\'' +
                 ", nomeFantasia='" + nomeFantasia + '\'' +
                 ", endereco='" + endereco + '\'' +
                 ", teleofone='" + telefone + '\'' +
