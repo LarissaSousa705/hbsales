@@ -11,16 +11,18 @@ public class LinhaCategoria {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long Id;
-    @Column(name = "cod_linha_categoria", unique = false, nullable = false, length = 5000)
-    private Long codLinhaCategoria;
-    @Column(name = "nome_categoria", unique = false, nullable = false, length = 5000)
-    private String nomeCategoria;
+    @Column(name = "cod_linha_categoria", unique = false, nullable = false, length = 10)
+    private String codLinhaCategoria;
+    /*@Column(name = "nome_categoria", unique = false, nullable = false, length = 50)
+    private Categorias nomeCategoria;*/
     @Column(name = "categoria_linha", unique = false, nullable = false)
     private String categoriaLinha;
 
-  //  @ManyToOne
+
+    @ManyToOne
     @JoinColumn(name = "id_categoria_produtos",referencedColumnName = "id")
-    private Long idCategoriaProdutos;
+    private Categorias idCategoriaProdutos;
+
 
     public Long getId() {
         return Id;
@@ -30,20 +32,20 @@ public class LinhaCategoria {
         Id = id;
     }
 
-    public Long getCodLinhaCategoria() {
+    public String getCodLinhaCategoria() {
         return codLinhaCategoria;
     }
 
-    public void setCodLinhaCategoria(Long codLinhaCategoria) {
+    public void setCodLinhaCategoria(String codLinhaCategoria) {
         this.codLinhaCategoria = codLinhaCategoria;
     }
 
-    public String getNomeCategoria() {
-        return nomeCategoria;
+    public Categorias getIdCategoriaProdutos() {
+        return idCategoriaProdutos;
     }
 
-    public void setNomeCategoria(String nomeCategoria) {
-        this.nomeCategoria = nomeCategoria;
+    public void setIdCategoriaProdutos(Categorias idCategoriaProdutos) {
+        this.idCategoriaProdutos = idCategoriaProdutos;
     }
 
     public String getCategoriaLinha() {
@@ -54,25 +56,14 @@ public class LinhaCategoria {
         this.categoriaLinha = categoriaLinha;
     }
 
-    public Long getIdCategoriaProdutos() {
-        return idCategoriaProdutos;
-    }
-
-    public void setIdCategoriaProdutos(Long idCategoriaProdutos) {
-        this.idCategoriaProdutos = idCategoriaProdutos;
-    }
-
     @Override
     public String toString() {
         return "LinhaCategoria{" +
                 "Id=" + Id +
-                ", codLinhaCategoria=" + codLinhaCategoria +
-                ", idCategoriaProdutos=" + idCategoriaProdutos +
+                ", codLinhaCategoria='" + codLinhaCategoria + '\'' +
                 ", categoriaLinha='" + categoriaLinha + '\'' +
-                ", nomeCategoria='" + nomeCategoria + '\'' +
+                ", idCategoriaProdutos=" + idCategoriaProdutos +
                 '}';
     }
-
-
 }
 

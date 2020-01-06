@@ -1,0 +1,1 @@
+ALTER TABLE dbo.seg_produtos ADD id_fornecedor BIGINT REFERENCES seg_fornecedor(id) NOT NULL;

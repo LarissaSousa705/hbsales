@@ -5,8 +5,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.Optional;
 
 
 @RestController
@@ -15,10 +17,12 @@ public class ProdutosRest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ProdutosRest.class);
     private final ProdutosService produtosService;
+    private final PonteProdutos ponteProdutos;
 
     @Autowired
-    public ProdutosRest(ProdutosService produtosService) {
+    public ProdutosRest(ProdutosService produtosService, PonteProdutos ponteProdutos) {
         this.produtosService = produtosService;
+        this.ponteProdutos = ponteProdutos;
     }
 
     @PostMapping
@@ -30,10 +34,10 @@ public class ProdutosRest {
     }
 
     @GetMapping("/{id}")
-    public ProdutosDTO find (@PathVariable("id")Long id){
+    public Optional<Produtos> find (@PathVariable("id")Long id){
         LOGGER.info("Recebendo find by ID... id: [{}]", id);
 
-        return this.produtosService.finById(id);
+        return this.ponteProdutos.findById(id);
     }
 
     @PutMapping("/{id}")
@@ -54,8 +58,22 @@ public class ProdutosRest {
     //export
     @GetMapping("/export-csv-produtos")
     public void exportcsv(HttpServletResponse response) throws Exception{
-        produtosService.findAllExport(response);
+        produtosService.exportProduto(response);
     }
 
+    //import
+    @PostMapping(value = "/import-csv-produtos")
+    public void importcsv(@RequestParam("file")MultipartFile multipartFileImport) throws Exception{
+        produtosService.importProduto(multipartFileImport);
+    }
+    //import
+    @PutMapping("import-csv-produtos-fornecedor/{id}")
+    public void importcsva(@RequestParam("file")MultipartFile multipartFileProdutos, @PathVariable("id") Long id) throws Exception{
+        produtosService.importProdutoFornecedor(multipartFileProdutos, id);
 
+    }
+    @GetMapping("/export-csv-periodoFornecedor/{id}/{id}")
+    public void exportCSV(HttpServletResponse response, @PathVariable("id") Long id, @PathVariable("id") Long id2) throws Exception{
+        produtosService.exportProdutos(response, id, id2);
+    }
 }

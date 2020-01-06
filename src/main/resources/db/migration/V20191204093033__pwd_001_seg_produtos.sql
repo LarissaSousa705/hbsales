@@ -1,10 +1,12 @@
 create table seg_produtos
 (
-            id                          BIGINT IDENTITY(1,1)    NOT NULL PRIMARY KEY,
-            nome_produto                VARCHAR(5000)    NOT NULL,
-            preco                       DECIMAL          NOT NULL,
-            unidade_caixa               DECIMAL          NOT NULL,
-            peso_unidade                DECIMAL          NOT NULL,
-            validade                   DATE      NOT NULL,
-            linha_categoria_produto     BIGINT FOREIGN KEY REFERENCES linha_categoria (id)  NOT NULL
+            id                          BIGINT IDENTITY(1,1)    PRIMARY KEY,
+            nome_produto                VARCHAR(200)            NOT NULL,
+            preco                       DECIMAL(25,2)           NOT NULL,
+            unidade_caixa               INTEGER                 NOT NULL,
+            peso_unidade                DECIMAL(25,3)           NOT NULL,
+            validade                    DATE                    NOT NULL,
+            cod_produto                 VARCHAR(10)             NOT NULL,
+            medida_peso                 VARCHAR(50)             NOT NULL,
+            linha_categoria_produto     BIGINT                  REFERENCES      linha_categoria (id) NULL
 );

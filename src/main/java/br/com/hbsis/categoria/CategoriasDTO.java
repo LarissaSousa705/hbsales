@@ -4,35 +4,35 @@ public class CategoriasDTO {
 
     private Long id;
     private String nomeCategoria;
-    private Long codCategoria;
-    private Long fornecedor04;
+    private String codCategoria;
+    private Long fornecedor;
 
     public CategoriasDTO(){
     }
 
 
-    public CategoriasDTO(Long id, String nomeCategoria, Long codCategoria, Long fornecedor04) {
+    public CategoriasDTO(Long id, String nomeCategoria, String codCategoria, Long fornecedor04) {
         this.id = id;
         this.nomeCategoria = nomeCategoria;
         this.codCategoria = codCategoria;
-        this.fornecedor04 = fornecedor04;
+        this.fornecedor = fornecedor04;
     }
 
     public static CategoriasDTO of(Categorias categorias) {
         return new  CategoriasDTO(
                 categorias.getId(),
-                categorias.getNome_categoria(),
-                categorias.getCod_categoria(),
-                categorias.getFornecedor04().getId()
+                categorias.getNomeCategoria(),
+                categorias.getCodCategoria(),
+                categorias.getFornecedor().getId()
         );
     }
 
-    public Long getFornecedor04() {
-        return fornecedor04;
+    public Long getFornecedor() {
+        return fornecedor;
     }
 
-    public void setFornecedor04(Long fornecedor04) {
-        this.fornecedor04 = fornecedor04;
+    public void setFornecedor(Long fornecedor) {
+        this.fornecedor = fornecedor;
     }
 
     public Long getId() {
@@ -51,15 +51,13 @@ public class CategoriasDTO {
         this.nomeCategoria = nomeCategoria;
     }
 
-
-    public Long getCodCategoria() {
+    public String getCodCategoria() {
         return codCategoria;
     }
 
-    public void setCodCategoria(Long codCategoria) {
+    public void setCodCategoria(String codCategoria) {
         this.codCategoria = codCategoria;
     }
-
 
     @Override
     public String toString() {
@@ -67,7 +65,7 @@ public class CategoriasDTO {
                 "id=" + id +
                 ", nomeCategoria='" + nomeCategoria + '\'' +
                 ", codCategoria=" + codCategoria +
-                ", fornecedor04=" + fornecedor04 +
+                ", fornecedor04=" + fornecedor +
                 '}';
     }
 

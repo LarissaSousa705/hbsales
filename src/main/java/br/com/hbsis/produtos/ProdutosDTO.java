@@ -1,39 +1,55 @@
 package br.com.hbsis.produtos;
 
+import br.com.hbsis.fornecedor.Fornecedor;
+import br.com.hbsis.itens.Itens;
 import br.com.hbsis.linhacategoria.LinhaCategoria;
+import br.com.hbsis.pedidos.Pedidos;
 
-import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 
 public class ProdutosDTO {
     private Long id;
     private String nomeProduto;
     private double preco;
-    private Long linhaCategoria;
-    private double unidadeCaixa;
+    private Long linhaCategoriaProduto;
+    private Long unidadeCaixa;
     private double pesoUnidade;
-    private LocalDateTime validade;
+    private Date validade;
+    private String codProduto;
+    private String medidaPeso;
+    private Long idFornecedor;
 
-    public ProdutosDTO(Long id, String nomeProduto, double preco, Long linhaCategoria, double unidadeCaixa, double pesoUnidade, LocalDateTime validade) {
+
+    public ProdutosDTO(Long id, String nomeProduto, double preco, Long linhaCategoriaProduto, Long unidadeCaixa, double pesoUnidade, Date validade, String codProduto, String medidaPeso, Long idFornecedor) {
         this.id = id;
         this.nomeProduto = nomeProduto;
         this.preco = preco;
-        this.linhaCategoria = linhaCategoria;
+        this.linhaCategoriaProduto = linhaCategoriaProduto;
         this.unidadeCaixa = unidadeCaixa;
         this.pesoUnidade = pesoUnidade;
         this.validade = validade;
+        this.codProduto = codProduto;
+        this.medidaPeso = medidaPeso;
+        this.idFornecedor = idFornecedor;
+
     }
 
-    public static  ProdutosDTO of(Produtos produtos){
-        return new ProdutosDTO(
-          produtos.getId(),
-          produtos.getNomeProduto(),
-          produtos.getPreco(),
-          produtos.getLinhaCategoria().getId(),
-          produtos.getUnidadeCaixa(),
-          produtos.getPesoUnidade(),
-          produtos.getValidade()
+    public ProdutosDTO() { }
 
+
+    public static ProdutosDTO of (Produtos produtos){
+        return new ProdutosDTO(
+                produtos.getId(),
+                produtos.getNomeProduto(),
+                produtos.getPreco(),
+                produtos.getLinhaCategoriaProduto().getId(),
+                produtos.getUnidadeCaixa(),
+                produtos.getPesoUnidade(),
+                produtos.getValidade(),
+                produtos.getCodProduto(),
+                produtos.getMedidaPeso(),
+                produtos.getIdFornecedor().getId()
         );
     }
 
@@ -61,19 +77,19 @@ public class ProdutosDTO {
         this.preco = preco;
     }
 
-    public Long getLinhaCategoria() {
-        return linhaCategoria;
+    public Long getLinhaCategoriaProduto() {
+        return linhaCategoriaProduto;
     }
 
-    public void setLinhaCategoria(Long linhaCategoria) {
-        this.linhaCategoria = linhaCategoria;
+    public void setLinhaCategoriaProduto(Long linhaCategoriaProduto) {
+        this.linhaCategoriaProduto = linhaCategoriaProduto;
     }
 
-    public double getUnidadeCaixa() {
+    public Long getUnidadeCaixa() {
         return unidadeCaixa;
     }
 
-    public void setUnidadeCaixa(double unidadeCaixa) {
+    public void setUnidadeCaixa(Long unidadeCaixa) {
         this.unidadeCaixa = unidadeCaixa;
     }
 
@@ -85,12 +101,36 @@ public class ProdutosDTO {
         this.pesoUnidade = pesoUnidade;
     }
 
-    public LocalDateTime getValidade() {
+    public Date getValidade() {
         return validade;
     }
 
-    public void setValidade(LocalDateTime validade) {
+    public void setValidade(Date validade) {
         this.validade = validade;
+    }
+
+    public String getCodProduto() {
+        return codProduto;
+    }
+
+    public void setCodProduto(String codProduto) {
+        this.codProduto = codProduto;
+    }
+
+    public String getMedidaPeso() {
+        return medidaPeso;
+    }
+
+    public void setMedidaPeso(String medidaPeso) {
+        this.medidaPeso = medidaPeso;
+    }
+
+    public Long getIdFornecedor() {
+        return idFornecedor;
+    }
+
+    public void setIdFornecedor(Long idFornecedor) {
+        this.idFornecedor = idFornecedor;
     }
 
     @Override
@@ -99,10 +139,14 @@ public class ProdutosDTO {
                 "id=" + id +
                 ", nomeProduto='" + nomeProduto + '\'' +
                 ", preco=" + preco +
-                ", linhaCategoria='" + linhaCategoria + '\'' +
+                ", linhaCategoriaProduto=" + linhaCategoriaProduto +
                 ", unidadeCaixa=" + unidadeCaixa +
                 ", pesoUnidade=" + pesoUnidade +
-                ", validade='" + validade + '\'' +
+                ", validade=" + validade +
+                ", codProduto='" + codProduto + '\'' +
+                ", medidaPeso='" + medidaPeso + '\'' +
+                ", idFornecedor=" + idFornecedor +
                 '}';
     }
 }
+

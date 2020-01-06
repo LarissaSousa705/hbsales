@@ -29,13 +29,6 @@ public class FornecedorRest {
         return this.fornecedorService.save(fornecedorDTO);
     }
 
-    @GetMapping("/{id}")
-    public FornecedorDTO find(@PathVariable("id") Long id) {
-
-        LOGGER.info("Recebendo find by ID... id: [{}]", id);
-
-        return this.fornecedorService.findById(id);
-    }
 
     @PutMapping("/{id}")
     public FornecedorDTO udpate(@PathVariable("id") Long id, @RequestBody FornecedorDTO fornecedorDTO) {
@@ -51,4 +44,7 @@ public class FornecedorRest {
 
         this.fornecedorService.delete(id);
     }
+
+
+
 }

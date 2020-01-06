@@ -18,11 +18,13 @@ public class CategoriasRest {
 
 
     private final CategoriasService categoriasService;
+    private final PonteCategoria ponteCategoria;
 
 
     @Autowired
-    public CategoriasRest(CategoriasService CategoriasService) {
+    public CategoriasRest(CategoriasService CategoriasService, PonteCategoria ponteCategoria) {
         this.categoriasService = CategoriasService;
+        this.ponteCategoria = ponteCategoria;
     }
 
     @PostMapping
@@ -35,26 +37,20 @@ public class CategoriasRest {
 
     @GetMapping("/export-csv-categorias")
     public void exportCSV(HttpServletResponse response) throws Exception{
-        categoriasService.findAll(response);
+        categoriasService.exportCategorias(response);
     }
 
     @PostMapping("/import-csv-categorias")
     public void importCSV(@RequestParam ("file") MultipartFile multipartFileImport) throws Exception{
-        categoriasService.readAll(multipartFileImport);
+        categoriasService.importCategorias(multipartFileImport);
 
     }
-
-/*    @PostMapping(value = "/import-csv-categorias", consumes = "multipart/form-data")
-    public void issoAi(@RequestParam("file") MultipartFile multipartFile){
-        this.categoriasService.importcsv(multipartFile);
-    }*/
-
 
     @GetMapping("/{id}")
     public CategoriasDTO find(@PathVariable("id") Long id) {
         LOGGER.info("Recebendo find by ID... id: [{}]", id);
 
-        return this.categoriasService.findById(id);
+        return this.ponteCategoria.findById(id);
     }
 
     @PutMapping("/{id}")
@@ -70,6 +66,6 @@ public class CategoriasRest {
     public void delete(@PathVariable("id") Long id) {
         LOGGER.info("Recebendo Delete para br.com.hbsis.Produtos de ID: {}", id);
 
-        this.categoriasService.delete(id);
+        this.ponteCategoria.delete(id);
     }
 }

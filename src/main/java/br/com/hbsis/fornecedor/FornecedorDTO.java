@@ -3,7 +3,7 @@ package br.com.hbsis.fornecedor;
 
 public class FornecedorDTO {
     private Long id;
-    private String razaoSocial;
+    private String razao;
     private String nomeFantasia;
     private String endereco;
     private String telefone;
@@ -12,11 +12,9 @@ public class FornecedorDTO {
 
 
 
-    public FornecedorDTO() {
-    }
 
-    public FornecedorDTO(Long id, String razaoSocial, String cnpj, String nomeFantasia, String endereco, String telefone, String email) {
-        this.razaoSocial = razaoSocial;
+    public FornecedorDTO(Long id, String razao, String cnpj, String nomeFantasia, String endereco, String telefone, String email) {
+        this.razao = razao;
         this.id = id;
         this.cnpj = cnpj;
         this.nomeFantasia = nomeFantasia;
@@ -28,7 +26,7 @@ public class FornecedorDTO {
     public static FornecedorDTO of(Fornecedor Fornecedor) {
         return new FornecedorDTO(
                 Fornecedor.getId(),
-                Fornecedor.getRazaoSocial(),
+                Fornecedor.getRazao(),
                 Fornecedor.getCnpj(),
                 Fornecedor.getNomeFantasia(),
                 Fornecedor.getEndereco(),
@@ -37,32 +35,23 @@ public class FornecedorDTO {
         );
     }
 
+    public Long getId() {
+        return id;
+    }
 
     public void setId(Long id) {
         this.id = id;
     }
 
-    public void setRazaoSocial(String razaoSocial) {
-        this.razaoSocial = razaoSocial;
+    public String getRazao() {
+        return razao;
+    }
+
+    public void setRazao(String razao) {
+        this.razao = razao;
     }
 
     public String getNomeFantasia() {
-        return nomeFantasia;
-    }
-
-    public String getCnpj() {
-        return cnpj;
-    }
-
-    public void setCnpj(String cnpj) {
-        this.cnpj = cnpj;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getRazaoSocial() {
         return nomeFantasia;
     }
 
@@ -94,11 +83,19 @@ public class FornecedorDTO {
         this.email = email;
     }
 
+    public String getCnpj() {
+        return cnpj;
+    }
+
+    public void setCnpj(String cnpj) {
+        this.cnpj = cnpj;
+    }
+
     @Override
     public String toString() {
         return "br.com.hbsis.Fornecedor{" +
                 "id=" + id +
-                ", razao='" + razaoSocial + '\'' +
+                ", razao='" + razao + '\'' +
                 ", nomeFantasia='" + nomeFantasia + '\'' +
                 ", endereco='" + endereco + '\'' +
                 ", teleofone='" + telefone + '\'' +

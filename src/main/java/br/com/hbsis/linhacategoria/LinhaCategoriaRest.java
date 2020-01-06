@@ -33,13 +33,13 @@ public class LinhaCategoriaRest {
       return this.linhaCategoriaService.save(linhaCategoriaDTO);
     }
 
-    @GetMapping
+/*    @GetMapping
     public  LinhaCategoriaDTO find(@PathVariable("Id") Long Id) {
 
         LOGGER.info("Recebendo find by ID... id: [{}]", Id);
 
         return this.linhaCategoriaService.findById(Id);
-    }
+    }*/
     @PutMapping("/{Id}")
     public LinhaCategoriaDTO udpate(@PathVariable("Id") Long Id, @RequestBody LinhaCategoriaDTO linhaCategoriaDTO) {
         LOGGER.info("Recebendo Update para br.com.hbsis.LinhasCategoria de ID: {}", Id);
@@ -55,15 +55,13 @@ public class LinhaCategoriaRest {
         this.linhaCategoriaService.delete(Id);
     }
 
-    //export
     @GetMapping("/export-csv-linhaCategoria")
     public void exportCSV(HttpServletResponse response) throws Exception{
-        linhaCategoriaService.findAll(response);
+        linhaCategoriaService.exportLinhaCategoria(response);
     }
 
-    //import
     @PostMapping(value= "/import-csv-linhaCategoria")
     public void importCSV(@RequestParam ("file")MultipartFile multipartFileImport) throws  Exception{
-        linhaCategoriaService.readAll(multipartFileImport);
+        linhaCategoriaService.importLinhaCategoria(multipartFileImport);
     }
 }

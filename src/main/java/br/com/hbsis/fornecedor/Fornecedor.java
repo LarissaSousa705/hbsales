@@ -12,22 +12,26 @@ public class Fornecedor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "razao_social", unique = false, nullable = false, length = 200)
-    private String razaoSocial;
-    @Column(name = "nome_fantasia", unique = false, length = 50)
+    @Column(name = "razao", unique = false, nullable = false, length = 100)
+    private String razao;
+    @Column(name = "nome_fantasia", unique = false, length = 100)
     private String nomeFantasia;
     @Column(name = "endereco", unique = false, updatable = false, length = 200)
     private String endereco;
-    @Column(name = "telefone", unique = false, updatable = false, length = 11)
+    @Column(name = "telefone", unique = false, updatable = false, length = 14)
     private String telefone;
-    @Column(name = "email", unique = false, updatable = false, length = 200)
+    @Column(name = "email", unique = false, updatable = false, length = 50)
     private String email;
-    @Column(name = "cnpj", unique = false, updatable = false, length = 11)
+    @Column(name = "cnpj", unique = false, updatable = false, length = 14)
     private String cnpj;
 
 
     public Fornecedor() {
         return;
+    }
+
+    public static Fornecedor of(Fornecedor fornecedor) {
+        return fornecedor;
     }
 
     public String getTelefone() {return telefone; }
@@ -40,9 +44,9 @@ public class Fornecedor {
 
     public Long getId() {return id; }
 
-    public String getRazaoSocial() { return razaoSocial; }
+    public String getRazao() { return razao; }
 
-    public void setRazaoSocial(String razaoSocial) { this.razaoSocial = razaoSocial; }
+    public void setRazao(String razao) { this.razao = razao; }
 
     public String getNomeFantasia() { return nomeFantasia; }
 
@@ -65,7 +69,7 @@ public class Fornecedor {
     public String toString() {
         return "Fornecedor{" +
                 "id=" + id +
-                ", razaoSocial='" + razaoSocial + '\'' +
+                ", razaoSocial='" + razao + '\'' +
                 ", nomeFantasia='" + nomeFantasia + '\'' +
                 ", endereco='" + endereco + '\'' +
                 ", telefone='" + telefone + '\'' +

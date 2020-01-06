@@ -14,13 +14,10 @@ import java.util.Optional;
 public class FornecedorService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FornecedorService.class);
+    private final PonteFornecedor ponteFornecedor;
 
-    private final IFornecedorRepository iFornecedorRepository;
-
-
-
-    public FornecedorService(IFornecedorRepository iFornecedorRepository) {
-        this.iFornecedorRepository = iFornecedorRepository ;
+    public FornecedorService(PonteFornecedor ponteFornecedor) {
+        this.ponteFornecedor = ponteFornecedor;
     }
 
     public FornecedorDTO save(FornecedorDTO fornecedorDTO) {
@@ -30,18 +27,19 @@ public class FornecedorService {
         LOGGER.info("Salvando fornecedores");
         LOGGER.debug("{} Fornecedor: {}", FornecedorService.class.getName(), fornecedorDTO);
 
-        Fornecedor Fornecedor = new Fornecedor();
-        Fornecedor.setRazaoSocial(fornecedorDTO.getRazaoSocial());
-        Fornecedor.setCnpj(fornecedorDTO.getCnpj());
-        Fornecedor.setNomeFantasia(fornecedorDTO.getNomeFantasia());
-        Fornecedor.setEndereco(fornecedorDTO.getEndereco());
-        Fornecedor.setTelefone(fornecedorDTO.getTelefone());
-        Fornecedor.setEmail(fornecedorDTO.getEmail());
+        Fornecedor fornecedor = new Fornecedor();
+        fornecedor.setRazao(fornecedorDTO.getRazao());
+        fornecedor.setCnpj(fornecedorDTO.getCnpj());
+        fornecedor.setNomeFantasia(fornecedorDTO.getNomeFantasia());
+        fornecedor.setEndereco(fornecedorDTO.getEndereco());
+        fornecedor.setTelefone(fornecedorDTO.getTelefone());
+        fornecedor.setEmail(fornecedorDTO.getEmail());
 
-        Fornecedor = this.iFornecedorRepository.save(Fornecedor);
+        fornecedor = this.ponteFornecedor.save(fornecedor);
 
-        return fornecedorDTO.of(Fornecedor);
+        return FornecedorDTO.of(fornecedor);
     }
+
 
     private void validate(FornecedorDTO FornecedorDTO) {
         LOGGER.info("Validando Fornecedor");
@@ -50,7 +48,7 @@ public class FornecedorService {
             throw new IllegalArgumentException("UsuarioDTO não deve ser nulo");
         }
 
-        if (StringUtils.isEmpty(FornecedorDTO.getRazaoSocial())) {
+        if (StringUtils.isEmpty(FornecedorDTO.getRazao())) {
             throw new IllegalArgumentException("Razão Social não deve ser nula/vazia");
         }
 
@@ -71,65 +69,37 @@ public class FornecedorService {
         }
     }
 
-    public FornecedorDTO findById(Long id) {
-        Optional<Fornecedor> FornecedorOptional = this.iFornecedorRepository.findById(id);
-
-        if (FornecedorOptional.isPresent()) {
-            return FornecedorDTO.of(FornecedorOptional.get());
-        }
-
-        throw new IllegalArgumentException(String.format("ID %s não existe", id));
-    }
-
-    public Fornecedor findByIdFornecedor(Long id) {
-        Optional<Fornecedor> FornecedorOptional = this.iFornecedorRepository.findById(id);
-
-        if (FornecedorOptional.isPresent()) {
-            return FornecedorOptional.get();
-        }
-
-        throw new IllegalArgumentException(String.format("ID %s não existe", id));
-    }
-
-    public Fornecedor findByIdOptitional(Long id ){
-        Optional<Fornecedor> fornecedorOptional = this.iFornecedorRepository.findById(id);
-
-        if (fornecedorOptional.isPresent()){
-            return fornecedorOptional.get();
-        }
-
-        throw new IllegalArgumentException(String.format("ID %s não existe", id ));
-    }
 
 
-    public FornecedorDTO update(FornecedorDTO FornecedorDTO, Long id) {
-        Optional<Fornecedor> FornecedorExistenteOptional = this.iFornecedorRepository.findById(id);
+    public FornecedorDTO update(FornecedorDTO fornecedorDTO, Long id) {
+        Optional<Fornecedor> fornecedorExistenteOptional = this.ponteFornecedor.findById(id);
 
-        if (FornecedorExistenteOptional.isPresent()) {
-            Fornecedor FornecedorExistente = FornecedorExistenteOptional.get();
+        if (fornecedorExistenteOptional.isPresent()) {
+            Fornecedor fornecedorExistente = fornecedorExistenteOptional.get();
 
-            LOGGER.info("Atualizando fornecedor... id: [{}]", FornecedorExistente.getId());
-            LOGGER.debug("Payload: {}", FornecedorDTO);
-            LOGGER.debug("br.com.hbsis.Fornecedor Existente: {}", FornecedorExistente);
+            LOGGER.info("Atualizando fornecedor... id: [{}]", fornecedorExistente.getId());
+            LOGGER.debug("Payload: {}", fornecedorDTO);
+            LOGGER.debug("br.com.hbsis.Fornecedor Existente: {}", fornecedorExistente);
 
-            FornecedorExistente.setRazaoSocial(FornecedorDTO.getRazaoSocial());
-            FornecedorExistente.setCnpj(FornecedorDTO.getCnpj());
-            FornecedorExistente.setNomeFantasia(FornecedorDTO.getNomeFantasia());
-            FornecedorExistente.setEndereco(FornecedorDTO.getEndereco());
-            FornecedorExistente.setTelefone(FornecedorDTO.getTelefone());
-            FornecedorExistente.setEmail(FornecedorDTO.getEmail());
 
-            FornecedorExistente = this.iFornecedorRepository.save(FornecedorExistente);
+            fornecedorExistente.setRazao(fornecedorDTO.getRazao());
+            fornecedorExistente.setNomeFantasia(fornecedorDTO.getNomeFantasia());
+            fornecedorExistente.setEndereco(fornecedorDTO.getEndereco());
+            fornecedorExistente.setTelefone(fornecedorDTO.getTelefone());
+            fornecedorExistente.setEmail(fornecedorDTO.getEmail());
+            fornecedorExistente.setCnpj(fornecedorDTO.getCnpj());
 
-            return FornecedorDTO.of(FornecedorExistente);
+            fornecedorExistente = this.ponteFornecedor.save(fornecedorExistente);
+
+
+            return FornecedorDTO.of(fornecedorExistente);
         }
         throw new IllegalArgumentException(String.format("ID %s não existe", id));
     }
-
     public void delete(Long id) {
         LOGGER.info("Executando delete para Fornecedor de ID: [{}]", id);
 
-        this.iFornecedorRepository.deleteById(id);
+        this.ponteFornecedor.deleteById(id);
     }
-}
 
+}
