@@ -4,10 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface IFornecedorRepository extends JpaRepository<Fornecedor, Long> {
-
-
-    Fornecedor findByCnpj(String cnpj);
+ interface IFornecedorRepository extends JpaRepository< Fornecedor, Long> {
 
     boolean existsById(Long id);
 }

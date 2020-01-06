@@ -1,6 +1,12 @@
 package br.com.hbsis.produtos;
 
+import br.com.hbsis.fornecedor.Fornecedor;
+import br.com.hbsis.itens.Itens;
+import br.com.hbsis.linhacategoria.LinhaCategoria;
+import br.com.hbsis.pedidos.Pedidos;
+
 import java.util.Date;
+import java.util.List;
 
 public class ProdutosDTO {
     private Long id;
@@ -12,9 +18,10 @@ public class ProdutosDTO {
     private Date validade;
     private String codProduto;
     private String medidaPeso;
+    private Long idFornecedor;
 
 
-    public ProdutosDTO(Long id, String nomeProduto, double preco, Long linhaCategoriaProduto, Long unidadeCaixa, double pesoUnidade, Date validade, String codProduto, String medidaPeso) {
+    public ProdutosDTO(Long id, String nomeProduto, double preco, Long linhaCategoriaProduto, Long unidadeCaixa, double pesoUnidade, Date validade, String codProduto, String medidaPeso, Long idFornecedor) {
         this.id = id;
         this.nomeProduto = nomeProduto;
         this.preco = preco;
@@ -24,6 +31,8 @@ public class ProdutosDTO {
         this.validade = validade;
         this.codProduto = codProduto;
         this.medidaPeso = medidaPeso;
+        this.idFornecedor = idFornecedor;
+
     }
 
     public ProdutosDTO() { }
@@ -39,7 +48,8 @@ public class ProdutosDTO {
                 produtos.getPesoUnidade(),
                 produtos.getValidade(),
                 produtos.getCodProduto(),
-                produtos.getMedidaPeso()
+                produtos.getMedidaPeso(),
+                produtos.getIdFornecedor().getId()
         );
     }
 
@@ -115,6 +125,14 @@ public class ProdutosDTO {
         this.medidaPeso = medidaPeso;
     }
 
+    public Long getIdFornecedor() {
+        return idFornecedor;
+    }
+
+    public void setIdFornecedor(Long idFornecedor) {
+        this.idFornecedor = idFornecedor;
+    }
+
     @Override
     public String toString() {
         return "ProdutosDTO{" +
@@ -123,9 +141,12 @@ public class ProdutosDTO {
                 ", preco=" + preco +
                 ", linhaCategoriaProduto=" + linhaCategoriaProduto +
                 ", unidadeCaixa=" + unidadeCaixa +
-                ", pesoUnidade='" + pesoUnidade + '\'' +
+                ", pesoUnidade=" + pesoUnidade +
                 ", validade=" + validade +
                 ", codProduto='" + codProduto + '\'' +
+                ", medidaPeso='" + medidaPeso + '\'' +
+                ", idFornecedor=" + idFornecedor +
                 '}';
     }
 }
+

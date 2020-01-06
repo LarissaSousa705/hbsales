@@ -1,20 +1,18 @@
 package br.com.hbsis.linhacategoria;
 
 import br.com.hbsis.categoria.Categorias;
-import br.com.hbsis.categoria.CategoriasService;
-import br.com.hbsis.categoria.ICategoriasRepository;
+import br.com.hbsis.categoria.PonteCategoria;
+import br.com.hbsis.export.Export;
 import com.microsoft.sqlserver.jdbc.StringUtils;
 import com.opencsv.*;
 import freemarker.template.utility.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -24,17 +22,14 @@ public class LinhaCategoriaService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LinhaCategoriaRest.class);
 
-    private final ILinhaCategoriaRepository iLinhaCategoriaRepository;
-    private final CategoriasService categoriasService;
-    private final ICategoriasRepository iCategoriasRepository;
+    private final PonteLinhaCategoria ponteLinhaCategoria;
+    private final PonteCategoria ponteCategoria;
 
-
-
-    public LinhaCategoriaService(ILinhaCategoriaRepository iLinhaCategoriaRepository, CategoriasService categoriasService, ICategoriasRepository iCategoriasRepository) {
-        this.iLinhaCategoriaRepository = iLinhaCategoriaRepository;
-        this.categoriasService = categoriasService;
-        this.iCategoriasRepository = iCategoriasRepository;
+    public LinhaCategoriaService(PonteLinhaCategoria ponteLinhaCategoria, PonteCategoria ponteCategoria) {
+        this.ponteLinhaCategoria = ponteLinhaCategoria;
+        this.ponteCategoria = ponteCategoria;
     }
+
 
     public LinhaCategoriaDTO save(LinhaCategoriaDTO linhaCategoriaDTO) {
         this.validate(linhaCategoriaDTO);
@@ -47,18 +42,18 @@ public class LinhaCategoriaService {
         linhaCategoria.setCodLinhaCategoria(linhaCategoriaDTO.getCodLinhaCategoria());
         linhaCategoria.setId(linhaCategoriaDTO.getId());
         linhaCategoria.setCategoriaLinha(linhaCategoriaDTO.getCategoriaLinha());
-        linhaCategoria.setIdCategoriaProdutos(categoriasService.findByIdCategoria(linhaCategoriaDTO.getIdCategoriaProdutos()));
+        linhaCategoria.setIdCategoriaProdutos(ponteCategoria.findByIdC(linhaCategoriaDTO.getIdCategoriaProdutos()));
 
         if (linhaCategoria.getCodLinhaCategoria().length() < 10) {
-            String codPronto9 = linhaCategoria.getCodLinhaCategoria();
-            codPronto9 = StringUtil.leftPad(codPronto9, 10, "0").toUpperCase();
-            linhaCategoria.setCodLinhaCategoria(codPronto9);
+            String codPronto = linhaCategoria.getCodLinhaCategoria();
+            codPronto = StringUtil.leftPad(codPronto, 10, "0").toUpperCase();
+            linhaCategoria.setCodLinhaCategoria(codPronto);
         }
 
 
-        linhaCategoria = this.iLinhaCategoriaRepository.save(linhaCategoria);
+        linhaCategoria = this.ponteLinhaCategoria.save(linhaCategoria);
 
-        return linhaCategoriaDTO.of(linhaCategoria);
+        return LinhaCategoriaDTO.of(linhaCategoria);
 
     }
 
@@ -75,42 +70,8 @@ public class LinhaCategoriaService {
 
     }
 
-    public LinhaCategoriaDTO findById(Long id) {
-        Optional<LinhaCategoria> linhaCategoriaOptional = this.iLinhaCategoriaRepository.findById(id);
-
-        if (linhaCategoriaOptional.isPresent()) {
-            return LinhaCategoriaDTO.of(linhaCategoriaOptional.get());
-
-        }
-
-        throw new IllegalArgumentException(String.format("ID %s não existe", id));
-    }
-
-    public LinhaCategoria findByCodLinha(String cod) {
-        Optional<LinhaCategoria> linhaCategoriaOptional = this.iLinhaCategoriaRepository.findByCodLinhaCategoria(cod);
-
-        if (linhaCategoriaOptional.isPresent()) {
-            return linhaCategoriaOptional.get();
-
-        }
-
-        throw new IllegalArgumentException(String.format("ID %s não existe", cod));
-    }
-
-    public LinhaCategoria findByIdLinhaCategoria(Long id) {
-        Optional<LinhaCategoria> linhaCategoriaOptional = this.iLinhaCategoriaRepository.findById(id);
-
-        if (linhaCategoriaOptional.isPresent()) {
-            return linhaCategoriaOptional.get();
-        }
-        throw new IllegalArgumentException(String.format("Id %s não existe ", id));
-    }
-
-
-
     public LinhaCategoriaDTO update(LinhaCategoriaDTO linhaCategoriaDTO, Long id) {
-        Optional<LinhaCategoria> linhaCategoriaExistenteOptional = this.iLinhaCategoriaRepository.findById(id);
-        Categorias categorias = new Categorias();
+        Optional<LinhaCategoria> linhaCategoriaExistenteOptional = this.ponteLinhaCategoria.findById(id);
 
         if (linhaCategoriaExistenteOptional.isPresent()) {
             LinhaCategoria linhaCategoriaExistente = linhaCategoriaExistenteOptional.get();
@@ -120,11 +81,11 @@ public class LinhaCategoriaService {
 
             linhaCategoriaExistente.setCategoriaLinha(linhaCategoriaDTO.getCategoriaLinha());
             linhaCategoriaExistente.setCodLinhaCategoria(linhaCategoriaDTO.getCodLinhaCategoria());
-            linhaCategoriaExistente.setIdCategoriaProdutos(categoriasService.findByIdCategoria(linhaCategoriaDTO.getIdCategoriaProdutos()));
+            linhaCategoriaExistente.setIdCategoriaProdutos(ponteCategoria.findByIdC(linhaCategoriaDTO.getIdCategoriaProdutos()));
 
-            linhaCategoriaExistente = this.iLinhaCategoriaRepository.save(linhaCategoriaExistente);
+            linhaCategoriaExistente = this.ponteLinhaCategoria.save(linhaCategoriaExistente);
 
-            return linhaCategoriaDTO.of(linhaCategoriaExistente);
+            return LinhaCategoriaDTO.of(linhaCategoriaExistente);
         }
         throw new IllegalArgumentException(String.format("ID %s não existe", id));
     }
@@ -132,36 +93,26 @@ public class LinhaCategoriaService {
     public void delete(Long id) {
         LOGGER.info("Executando delete para Linhas de Categoria de ID: [{}]", id);
 
-        this.iLinhaCategoriaRepository.deleteById(id);
+        this.ponteLinhaCategoria.deleteById(id);
     }
 
+
     //export
-    public void findAll(HttpServletResponse response) throws Exception {
-        String linhaCategoria = "linhaCategoria.csv";
+    public void exportLinhaCategoria(HttpServletResponse response) throws Exception {
 
-        response.setContentType("text/csv");
-        response.setHeader(HttpHeaders.CONTENT_DISPOSITION,
-                "Attachment; filename = \"" + linhaCategoria + "\"");
-        PrintWriter writer = response.getWriter();
+        Export export = new Export();
+
+        export.exportPadrao(new String[]{"codLinhaCategoria", "categoriaLinha", "codCatgeoria", "nomeCategoria"}, response, "exportLinhaCategoria");
 
 
-        ICSVWriter icsvWriter = new CSVWriterBuilder(writer)
-                .withSeparator(';')
-                .withEscapeChar(CSVWriter.DEFAULT_ESCAPE_CHARACTER)
-                .withLineEnd(CSVWriter.DEFAULT_LINE_END)
-                .build();
-
-        String headerCSV[] = {"codLinhaCategoria", "categoriaLinha", "codCatgeoria", "nomeCategoria"};
-        icsvWriter.writeNext(headerCSV);
-
-        for (LinhaCategoria line : iLinhaCategoriaRepository.findAll()) {
-            icsvWriter.writeNext(new String[]{line.getCodLinhaCategoria(), line.getCategoriaLinha(), line.getIdCategoriaProdutos().getCodCategoria(), line.getIdCategoriaProdutos().getNomeCategoria()});
+        for (LinhaCategoria line : ponteLinhaCategoria.findAll()) {
+            export.exportPadrao(new String[]{line.getCodLinhaCategoria(), line.getCategoriaLinha(), line.getIdCategoriaProdutos().getCodCategoria(),
+                    line.getIdCategoriaProdutos().getNomeCategoria()}, response, "exportLinhaCategoria");
         }
     }
 
-    //import
 
-    public List<LinhaCategoria> readAll(MultipartFile multipartFile) throws Exception {
+    public List<LinhaCategoria> importLinhaCategoria(MultipartFile multipartFile) throws Exception {
         InputStreamReader inputStreamReader = new InputStreamReader(multipartFile.getInputStream());
         CSVReader csvReader = new CSVReaderBuilder(inputStreamReader).withSkipLines(1).build();
 
@@ -172,20 +123,20 @@ public class LinhaCategoriaService {
         for (String[] line : linhas) {
             try {
                 String[] line2 = line[0].replaceAll("\"", "").split(";");
-                if (iCategoriasRepository.existsByCodCategoria(line2[2])) {
+                if (ponteCategoria.existCodCategoria(line2[2])) {
                     LinhaCategoria linhaCategoria = new LinhaCategoria();
-                    Categorias categorias = new Categorias();
+                    Categorias categorias;
                     linhaCategoria.setCodLinhaCategoria((line2[0]));
                     linhaCategoria.setCategoriaLinha(line2[1]);
-                    categorias = categoriasService.findByCodCategoria(line2[2]);
+                    categorias = ponteCategoria.findByCod(line2[2]);
                     linhaCategoria.setIdCategoriaProdutos(categorias);
 
-                    if (!iLinhaCategoriaRepository.existsByCodLinhaCategoria(line2[0])) {
+                    if (!ponteLinhaCategoria.existsByCodLinhaCategoria(line2[0])) {
                         linhaCategorias.add(linhaCategoria);
                     } else {
                         LOGGER.info("Linha Categoria já existe");
                     }
-                }else{
+                } else {
                     LOGGER.info("Categoria não existe");
                 }
 
@@ -193,13 +144,8 @@ public class LinhaCategoriaService {
                 e.printStackTrace();
             }
 
-        }/*else {
-            throw new IllegalArgumentException(String.format("Linha Categoria ja existente", linhaCategorias));
-
-        } */
-        return iLinhaCategoriaRepository.saveAll(linhaCategorias);
+        }
+        return ponteLinhaCategoria.saveAll(linhaCategorias);
     }
-
-
 }
 

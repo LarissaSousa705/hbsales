@@ -1,9 +1,13 @@
 package br.com.hbsis.produtos;
 
+import br.com.hbsis.fornecedor.Fornecedor;
+import br.com.hbsis.itens.Itens;
 import br.com.hbsis.linhacategoria.LinhaCategoria;
+import br.com.hbsis.pedidos.Pedidos;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 
 @Entity
@@ -30,6 +34,13 @@ public class Produtos {
     @ManyToOne
     @JoinColumn(name = "linha_categoria_produto", referencedColumnName = "id")
     private LinhaCategoria linhaCategoriaProduto;
+    @OneToOne
+    @JoinColumn(name = "id_fornecedor", referencedColumnName = "id")
+    private Fornecedor idFornecedor;
+
+    public Produtos() {
+
+    }
 
     public Long getId() {
         return id;
@@ -103,6 +114,14 @@ public class Produtos {
         this.linhaCategoriaProduto = linhaCategoriaProduto;
     }
 
+    public Fornecedor getIdFornecedor() {
+        return idFornecedor;
+    }
+
+    public void setIdFornecedor(Fornecedor idFornecedor) {
+        this.idFornecedor = idFornecedor;
+    }
+
     @Override
     public String toString() {
         return "Produtos{" +
@@ -114,9 +133,10 @@ public class Produtos {
                 ", pesoUnidade=" + pesoUnidade +
                 ", validade=" + validade +
                 ", medidaPeso='" + medidaPeso + '\'' +
-                ", linhaCategoria=" + linhaCategoriaProduto +
+                ", linhaCategoriaProduto=" + linhaCategoriaProduto +
+                ", idFornecedor=" + idFornecedor +
                 '}';
     }
-
 }
+
 

@@ -8,7 +8,6 @@ public interface IProdutosRepository extends JpaRepository<Produtos, Long> {
 
     Optional<Produtos> findByCodProduto(String codProduto);
 
-
 }
 
 

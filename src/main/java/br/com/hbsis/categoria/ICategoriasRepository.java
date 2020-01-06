@@ -11,10 +11,9 @@ import java.util.Optional;
  * Classe responsável pela comunciação com o banco de dados
  */
 @Repository
-public interface ICategoriasRepository extends JpaRepository<Categorias, Long> {
+interface ICategoriasRepository extends JpaRepository<Categorias, Long> {
+
     boolean existsByCodCategoria(String codCategoria);
     Optional<Categorias> findByCodCategoria(String codCategoria);
-
-     //Categorias existByIdC(Long id);
 
 }

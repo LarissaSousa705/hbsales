@@ -1,14 +1,13 @@
 package br.com.hbsis.periodoVendas;
 
-import org.apache.tomcat.jni.Local;
+import br.com.hbsis.fornecedor.Fornecedor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 //mapeamento da entidade do banco de dados
 @Entity
-@Table(name = "seg_perido_vendas")
+@Table(name = "seg_periodo_vendas")
 public class PeriodoVendas {
 
     @Id
@@ -18,8 +17,9 @@ public class PeriodoVendas {
     private LocalDateTime dataInicio;
     @Column(name = "data_fim", unique = false,nullable = false)
     private LocalDateTime dataFim;
-    @Column(name = "perido_vendas_fornecedor", unique = false, nullable = false)
-    private LocalDateTime peridoVendasFornecedor;
+    @OneToOne
+    @JoinColumn(name = "periodo_vendas_fornecedor",referencedColumnName = "id")
+    private Fornecedor periodoVendasFornecedor;
     @Column(name = "data_retirada", unique = false, nullable = false)
     private LocalDateTime dataRetirada;
     @Column(name = "descricao", unique = false, nullable = false, length = 50)
@@ -37,24 +37,26 @@ public class PeriodoVendas {
         return dataInicio;
     }
 
-    public void setDataInicio(LocalDateTime dataInicio) {
+    public LocalDateTime setDataInicio(LocalDateTime dataInicio) {
         this.dataInicio = dataInicio;
+        return dataInicio;
     }
 
     public LocalDateTime getDataFim() {
         return dataFim;
     }
 
-    public void setDataFim(LocalDateTime dataFim) {
+    public LocalDateTime setDataFim(LocalDateTime dataFim) {
         this.dataFim = dataFim;
+        return dataFim;
     }
 
-    public LocalDateTime getPeridoVendasFornecedor() {
-        return peridoVendasFornecedor;
+    public Fornecedor getPeriodoVendasFornecedor() {
+        return periodoVendasFornecedor;
     }
 
-    public void setPeridoVendasFornecedor(LocalDateTime peridoVendasFornecedor) {
-        this.peridoVendasFornecedor = peridoVendasFornecedor;
+    public void setPeriodoVendasFornecedor(Fornecedor periodoVendasFornecedor) {
+        this.periodoVendasFornecedor = periodoVendasFornecedor;
     }
 
     public LocalDateTime getDataRetirada() {
@@ -79,7 +81,7 @@ public class PeriodoVendas {
                 "id=" + id +
                 ", dataInicio=" + dataInicio +
                 ", dataFim=" + dataFim +
-                ", peridoVendasFornecedor=" + peridoVendasFornecedor +
+                ", periodoVendasFornecedor=" + periodoVendasFornecedor +
                 ", dataRetirada=" + dataRetirada +
                 ", descricao='" + descricao + '\'' +
                 '}';

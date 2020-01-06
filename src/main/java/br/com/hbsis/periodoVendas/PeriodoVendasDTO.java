@@ -9,24 +9,25 @@ public class PeriodoVendasDTO {
     private Long id;
     private LocalDateTime dataInicio;
     private LocalDateTime dataFim;
-    private LocalDateTime peridoVendasFornecedor;
+    private Long periodoVendasFornecedor;
     private LocalDateTime dataRetirada;
     private String descricao;
 
-    public PeriodoVendasDTO(Long id, LocalDateTime dataInicio, LocalDateTime dataFim, LocalDateTime peridoVendasFornecedor, LocalDateTime dataRetirada, String descricao) {
+    public PeriodoVendasDTO(Long id, LocalDateTime dataInicio, LocalDateTime dataFim, Long periodoVendasFornecedor, LocalDateTime dataRetirada, String descricao) {
         this.id = id;
         this.dataInicio = dataInicio;
         this.dataFim = dataFim;
-        this.peridoVendasFornecedor = peridoVendasFornecedor;
+        this.periodoVendasFornecedor = periodoVendasFornecedor;
         this.dataRetirada = dataRetirada;
         this.descricao = descricao;
     }
+
     public static PeriodoVendasDTO of(PeriodoVendas periodoVendas){
         return new PeriodoVendasDTO(
                 periodoVendas.getId(),
                 periodoVendas.getDataInicio(),
                 periodoVendas.getDataFim(),
-                periodoVendas.getPeridoVendasFornecedor(),
+                periodoVendas.getPeriodoVendasFornecedor().getId(),
                 periodoVendas.getDataRetirada(),
                 periodoVendas.getDescricao()
         );
@@ -56,12 +57,12 @@ public class PeriodoVendasDTO {
         this.dataFim = dataFim;
     }
 
-    public LocalDateTime getPeridoVendasFornecedor() {
-        return peridoVendasFornecedor;
+    public Long getPeriodoVendasFornecedor() {
+        return periodoVendasFornecedor;
     }
 
-    public void setPeridoVendasFornecedor(LocalDateTime peridoVendasFornecedor) {
-        this.peridoVendasFornecedor = peridoVendasFornecedor;
+    public void setPeriodoVendasFornecedor(Long periodoVendasFornecedor) {
+        this.periodoVendasFornecedor = periodoVendasFornecedor;
     }
 
     public LocalDateTime getDataRetirada() {
@@ -86,7 +87,7 @@ public class PeriodoVendasDTO {
                 "id=" + id +
                 ", dataInicio=" + dataInicio +
                 ", dataFim=" + dataFim +
-                ", peridoVendasFornecedor=" + peridoVendasFornecedor +
+                ", periodoVendasFornecedor=" + periodoVendasFornecedor +
                 ", dataRetirada=" + dataRetirada +
                 ", descricao='" + descricao + '\'' +
                 '}';

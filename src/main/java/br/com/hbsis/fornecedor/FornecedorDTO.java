@@ -12,11 +12,9 @@ public class FornecedorDTO {
 
 
 
-    public FornecedorDTO() {
-    }
 
-    public FornecedorDTO(Long id, String razaoSocial, String cnpj, String nomeFantasia, String endereco, String telefone, String email) {
-        this.razao = razaoSocial;
+    public FornecedorDTO(Long id, String razao, String cnpj, String nomeFantasia, String endereco, String telefone, String email) {
+        this.razao = razao;
         this.id = id;
         this.cnpj = cnpj;
         this.nomeFantasia = nomeFantasia;
@@ -37,9 +35,16 @@ public class FornecedorDTO {
         );
     }
 
+    public Long getId() {
+        return id;
+    }
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getRazao() {
+        return razao;
     }
 
     public void setRazao(String razao) {
@@ -47,22 +52,6 @@ public class FornecedorDTO {
     }
 
     public String getNomeFantasia() {
-        return nomeFantasia;
-    }
-
-    public String getCnpj() {
-        return cnpj;
-    }
-
-    public void setCnpj(String cnpj) {
-        this.cnpj = cnpj;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getRazao() {
         return nomeFantasia;
     }
 
@@ -92,6 +81,14 @@ public class FornecedorDTO {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getCnpj() {
+        return cnpj;
+    }
+
+    public void setCnpj(String cnpj) {
+        this.cnpj = cnpj;
     }
 
     @Override
