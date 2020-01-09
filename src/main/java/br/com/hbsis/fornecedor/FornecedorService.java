@@ -21,9 +21,7 @@ public class FornecedorService {
     }
 
     public FornecedorDTO save(FornecedorDTO fornecedorDTO) {
-
         this.validate(fornecedorDTO);
-
         LOGGER.info("Salvando fornecedores");
         LOGGER.debug("{} Fornecedor: {}", FornecedorService.class.getName(), fornecedorDTO);
 
@@ -34,7 +32,6 @@ public class FornecedorService {
         fornecedor.setEndereco(fornecedorDTO.getEndereco());
         fornecedor.setTelefone(fornecedorDTO.getTelefone());
         fornecedor.setEmail(fornecedorDTO.getEmail());
-
         fornecedor = this.ponteFornecedor.save(fornecedor);
 
         return FornecedorDTO.of(fornecedor);
@@ -69,8 +66,6 @@ public class FornecedorService {
         }
     }
 
-
-
     public FornecedorDTO update(FornecedorDTO fornecedorDTO, Long id) {
         Optional<Fornecedor> fornecedorExistenteOptional = this.ponteFornecedor.findById(id);
 
@@ -91,7 +86,6 @@ public class FornecedorService {
 
             fornecedorExistente = this.ponteFornecedor.save(fornecedorExistente);
 
-
             return FornecedorDTO.of(fornecedorExistente);
         }
         throw new IllegalArgumentException(String.format("ID %s não existe", id));
@@ -101,5 +95,4 @@ public class FornecedorService {
 
         this.ponteFornecedor.deleteById(id);
     }
-
 }

@@ -28,8 +28,6 @@ public class FornecedorRest {
 
         return this.fornecedorService.save(fornecedorDTO);
     }
-
-
     @PutMapping("/{id}")
     public FornecedorDTO udpate(@PathVariable("id") Long id, @RequestBody FornecedorDTO fornecedorDTO) {
         LOGGER.info("Recebendo Update para br.com.hbsis.Fornecedor de ID: {}", id);

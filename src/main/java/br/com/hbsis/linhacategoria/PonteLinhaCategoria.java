@@ -31,14 +31,6 @@ public class PonteLinhaCategoria {
         throw new IllegalArgumentException(String.format("ID %s não existe", id));
     }
 
-    public Optional<LinhaCategoria> findByCodLinhaCategoria(String cod) {
-        Optional<LinhaCategoria> linhaCategoriaOptional = this.iLinhaCategoriaRepository.findByCodLinhaCategoria(cod);
-        if (linhaCategoriaOptional.isPresent()){
-            return linhaCategoriaOptional;
-        }
-        throw new IllegalArgumentException(String.format("COD %s não existe", cod));
-    }
-
     public void deleteById(Long id) {
         LOGGER.info("Executando delete para Categorias de ID: [{}]", id);
 
@@ -74,12 +66,12 @@ public class PonteLinhaCategoria {
         throw new IllegalArgumentException(String.format("ID %s não encontrado", linhaCategoriaProduto));
     }
 
-    public LinhaCategoria findByCodLinha(String e) {
-        Optional<LinhaCategoria> linhaCategoriaOptional =this.iLinhaCategoriaRepository.findByCodLinhaCategoria(e);
+    public LinhaCategoria findByCodLinha(String codLinhaCategoria) {
+        Optional<LinhaCategoria> linhaCategoriaOptional =this.iLinhaCategoriaRepository.findByCodLinhaCategoria(codLinhaCategoria);
         if (linhaCategoriaOptional.isPresent()){
             return linhaCategoriaOptional.get();
         }
-        throw new IllegalArgumentException(String.format("COD %s não encontrador", e));
+        throw new IllegalArgumentException(String.format("COD %s não encontrador", codLinhaCategoria));
 
     }
 }

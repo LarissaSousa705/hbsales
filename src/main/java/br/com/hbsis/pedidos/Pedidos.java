@@ -8,7 +8,6 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
-//mapeamento da entidade do banco de dados
 @Entity
 @Table(name = "seg_pedido")
 public class Pedidos {
@@ -28,7 +27,6 @@ public class Pedidos {
     @ManyToOne
     @JoinColumn(name = "periodo_vendas", nullable = false, referencedColumnName = "id")
     private PeriodoVendas periodoVendas;
-
     @OneToMany(mappedBy = "pedidos")
     private List<Itens> itensList;
 
@@ -88,16 +86,6 @@ public class Pedidos {
         this.itensList = itensList;
     }
 
-    @Override
-    public String toString() {
-        return "Pedidos{" +
-                "id=" + id +
-                ", codPedido='" + codPedido + '\'' +
-                ", status='" + status + '\'' +
-                ", dataPedido=" + dataPedido +
-                ", funcionario=" + funcionario +
-                ", periodoVendas=" + periodoVendas +
-                ", itensList=" + itensList +
-                '}';
-    }
+
 }
+

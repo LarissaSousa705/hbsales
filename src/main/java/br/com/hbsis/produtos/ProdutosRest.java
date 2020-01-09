@@ -42,8 +42,8 @@ public class ProdutosRest {
 
     @PutMapping("/{id}")
     public ProdutosDTO update(@PathVariable("id") Long id, @RequestBody ProdutosDTO produtosDTO){
-        LOGGER.info("Recebendo Update para .Produtos de ID: {`}", id);
-        LOGGER.debug("payload: {]", produtosDTO);
+        LOGGER.info("Recebendo Update para .Produtos de ID: {}", id);
+        LOGGER.debug("payload: {}", produtosDTO);
 
         return this.produtosService.update(produtosDTO, id);
     }
@@ -55,18 +55,15 @@ public class ProdutosRest {
         this.produtosService.delete(id);
     }
 
-    //export
     @GetMapping("/export-csv-produtos")
     public void exportcsv(HttpServletResponse response) throws Exception{
         produtosService.exportProduto(response);
     }
 
-    //import
     @PostMapping(value = "/import-csv-produtos")
     public void importcsv(@RequestParam("file")MultipartFile multipartFileImport) throws Exception{
         produtosService.importProduto(multipartFileImport);
     }
-    //import
     @PutMapping("import-csv-produtos-fornecedor/{id}")
     public void importcsva(@RequestParam("file")MultipartFile multipartFileProdutos, @PathVariable("id") Long id) throws Exception{
         produtosService.importProdutoFornecedor(multipartFileProdutos, id);
@@ -76,4 +73,5 @@ public class ProdutosRest {
     public void exportCSV(HttpServletResponse response, @PathVariable("id") Long id, @PathVariable("id") Long id2) throws Exception{
         produtosService.exportProdutos(response, id, id2);
     }
+
 }

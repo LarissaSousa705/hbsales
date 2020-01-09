@@ -18,7 +18,6 @@ import br.com.hbsis.linhacategoria.LinhaCategoria;
 import br.com.hbsis.linhacategoria.LinhaCategoriaDTO;
 import br.com.hbsis.linhacategoria.LinhaCategoriaService;
 import br.com.hbsis.linhacategoria.PonteLinhaCategoria;
-import br.com.hbsis.pedidos.Pedidos;
 import br.com.hbsis.pedidos.PontePedidos;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
@@ -98,12 +97,8 @@ public class ProdutosService {
 
         }
         produtos = this.ponteProdutos.save(produtos);
-
-
         return ProdutosDTO.of(produtos);
     }
-
-
     private void validate(ProdutosDTO produtosDTO) {
 
         LOGGER.info("Validando Produtos");
@@ -128,13 +123,8 @@ public class ProdutosService {
         }
     }
 
-
-
-
-
     public ProdutosDTO update(ProdutosDTO produtosDTO, Long id) {
         Optional<Produtos> produtosOptionalExistente = this.ponteProdutos.findById(id);
-
 
         if (produtosOptionalExistente.isPresent()) {
             Produtos produtosExistente = produtosOptionalExistente.get();
@@ -152,10 +142,9 @@ public class ProdutosService {
             produtosExistente.setIdFornecedor(ponteFornecedor.findByIdFornecedor(produtosDTO.getIdFornecedor()));
             produtosExistente.setLinhaCategoriaProduto(ponteLinhaCategoria.findByIdLinhaCategoria(produtosDTO.getLinhaCategoriaProduto()));
 
-
             produtosExistente = this.ponteProdutos.save(produtosExistente);
 
-            return produtosDTO.of(produtosExistente);
+            return ProdutosDTO.of(produtosExistente);
         }
         throw new IllegalArgumentException(String.format("ID %s não existe", id));
     }
@@ -243,13 +232,10 @@ public class ProdutosService {
                 String e = codCategoriaLinha55.replaceAll("[^0-9]", "");
                 classLinhaCategoria = ponteLinhaCategoria.findByCodLinha(e);
 
-
                 classProdutos.setPesoUnidade(Double.parseDouble(a));
                 classProdutos.setMedidaPeso(b);
                 classProdutos.setPreco(Double.parseDouble(c));
                 classProdutos.setCodProduto(d);
-
-
                 classProdutos.setLinhaCategoriaProduto(classLinhaCategoria);
 
                 produtosList.add(classProdutos);
@@ -312,7 +298,6 @@ public class ProdutosService {
                     produtos.setMedidaPeso(medida);
                     produtos.setLinhaCategoriaProduto(linhaCategoria);
 
-
                     if (ponteFornecedor.existsById(id)) {
                         String nomeFantasia = ponteFornecedor.findByIdFornecedor(id).getNomeFantasia();
                         String endereco = ponteFornecedor.findByIdFornecedor(id).getEndereco();
@@ -353,7 +338,6 @@ public class ProdutosService {
                         categorias = ponteCategoria.findByCod(codCategoria);
                         linhaCategoriaDTO.setIdCategoriaProdutos(categorias.getId());
                         linhaCategoriaService.save(linhaCategoriaDTO);
-
 
                     } else if (ponteLinhaCategoria.existsByCodLinhaCategoria(codLinhaCategoria)) {
                         linhaCategoriaDTO.setCodLinhaCategoria(codLinhaCategoria);
@@ -397,7 +381,7 @@ public class ProdutosService {
 
         Produtos produtos = ponteProdutos.findByIdProdutos(id);
         if (produtos.getId().toString().equals(id.toString())) {
-            Funcionario funcionario = ponteFuncionario.findByIdFun(id2);
+            Funcionario funcionario = ponteFuncionario.findByIdFuncionario(id2);
             String nomeFuncionario = funcionario.getNome();
             String cnpj = produtos.getIdFornecedor().getCnpj();
             String razao = produtos.getIdFornecedor().getRazao();

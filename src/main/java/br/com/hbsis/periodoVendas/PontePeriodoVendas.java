@@ -1,6 +1,5 @@
 package br.com.hbsis.periodoVendas;
 
-import br.com.hbsis.fornecedor.Fornecedor;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -49,14 +48,6 @@ public class PontePeriodoVendas {
 
     public List<PeriodoVendas> findallF() {
         return iPeriodoVendasRepository.findAll();
-    }
-
-    public boolean existFornecedor(Fornecedor id){
-        return iPeriodoVendasRepository.existsByPeriodoVendasFornecedor(id);
-    }
-
-    public PeriodoVendas findByFornecedor(Long id){
-        return iPeriodoVendasRepository.findByPeriodoVendasFornecedor(id);
     }
 
 }

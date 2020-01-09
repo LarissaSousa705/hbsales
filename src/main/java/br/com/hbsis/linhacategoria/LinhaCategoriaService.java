@@ -4,7 +4,8 @@ import br.com.hbsis.categoria.Categorias;
 import br.com.hbsis.categoria.PonteCategoria;
 import br.com.hbsis.export.Export;
 import com.microsoft.sqlserver.jdbc.StringUtils;
-import com.opencsv.*;
+import com.opencsv.CSVReader;
+import com.opencsv.CSVReaderBuilder;
 import freemarker.template.utility.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,7 +39,6 @@ public class LinhaCategoriaService {
         LOGGER.debug("br.com.hbsis.CatgeoriasLinhas:{}", linhaCategoriaDTO);
         LinhaCategoria linhaCategoria = new LinhaCategoria();
 
-
         linhaCategoria.setCodLinhaCategoria(linhaCategoriaDTO.getCodLinhaCategoria());
         linhaCategoria.setId(linhaCategoriaDTO.getId());
         linhaCategoria.setCategoriaLinha(linhaCategoriaDTO.getCategoriaLinha());
@@ -49,14 +49,11 @@ public class LinhaCategoriaService {
             codPronto = StringUtil.leftPad(codPronto, 10, "0").toUpperCase();
             linhaCategoria.setCodLinhaCategoria(codPronto);
         }
-
-
         linhaCategoria = this.ponteLinhaCategoria.save(linhaCategoria);
 
         return LinhaCategoriaDTO.of(linhaCategoria);
 
     }
-
     private void validate(LinhaCategoriaDTO linhaCategoriaDTO) {
         LOGGER.info("Validando Categoria");
 
@@ -96,8 +93,6 @@ public class LinhaCategoriaService {
         this.ponteLinhaCategoria.deleteById(id);
     }
 
-
-    //export
     public void exportLinhaCategoria(HttpServletResponse response) throws Exception {
 
         Export export = new Export();
@@ -111,11 +106,9 @@ public class LinhaCategoriaService {
         }
     }
 
-
     public List<LinhaCategoria> importLinhaCategoria(MultipartFile multipartFile) throws Exception {
         InputStreamReader inputStreamReader = new InputStreamReader(multipartFile.getInputStream());
         CSVReader csvReader = new CSVReaderBuilder(inputStreamReader).withSkipLines(1).build();
-
 
         List<String[]> linhas = csvReader.readAll();
         List<LinhaCategoria> linhaCategorias = new ArrayList<>();

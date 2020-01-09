@@ -26,8 +26,6 @@ public class PonteFornecedor {
 
         throw new IllegalArgumentException(String.format("ID %s não existe", id));
     }
-
-
     public Fornecedor findByIdFornecedor(Long id) {
         Optional<Fornecedor> fornecedorOptional = this.iFornecedorRepository.findById(id);
 
@@ -37,9 +35,6 @@ public class PonteFornecedor {
 
         throw new IllegalArgumentException(String.format("ID %s não existe", id));
     }
-
-
-
 
     public Fornecedor save(Fornecedor fornecedor) {
         LOGGER.info("Executando save para Fornecedor : [{}]", fornecedor);
@@ -56,8 +51,7 @@ public class PonteFornecedor {
         return this.iFornecedorRepository.existsById(id);
     }
 
-
-    public List<Fornecedor> findAll(Long idFornecedor) {
+    public List<Fornecedor> findAll() {
         List<Fornecedor> fornecedorList = this.iFornecedorRepository.findAll();
         if (fornecedorList.isEmpty()){
             return fornecedorList;

@@ -3,7 +3,8 @@ package br.com.hbsis.categoria;
 import br.com.hbsis.export.Export;
 import br.com.hbsis.fornecedor.Fornecedor;
 import br.com.hbsis.fornecedor.PonteFornecedor;
-import com.opencsv.*;
+import com.opencsv.CSVReader;
+import com.opencsv.CSVReaderBuilder;
 import freemarker.template.utility.StringUtil;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -38,7 +39,6 @@ public class CategoriasService {
     public CategoriasDTO save(CategoriasDTO categoriasDTO) {
         Optional<Fornecedor> fornecedorOptional = this.ponteFornecedor.findById(categoriasDTO.getFornecedor());
 
-        Fornecedor fornecedor = new Fornecedor();
         LOGGER.info("Salvando categorias");
         LOGGER.debug("br.com.hbsis.Categorias: {}", categoriasDTO);
 
@@ -60,11 +60,9 @@ public class CategoriasService {
             categorias.setCodCategoria(codPronto2);
         }
         categorias.setCodCategoria(codCategoria);
-
         categorias = this.ponteCategoria.save(categorias);
 
         return CategoriasDTO.of(categorias);
-
     }
 
     private void validate(CategoriasDTO categoriasDTO) {
@@ -73,7 +71,6 @@ public class CategoriasService {
         if (categoriasDTO == null) {
             throw new IllegalArgumentException("CategoriasDTO não deve ser nulo");
         }
-
         if (StringUtils.isEmpty(categoriasDTO.getNomeCategoria())) {
             throw new IllegalArgumentException("Nome da categoria não deve ser nulo/vazio");
         }
@@ -88,7 +85,6 @@ public class CategoriasService {
             LOGGER.info("Atualizando categorias... id: [{}]", categoriasExistente.getId());
             LOGGER.debug("Payload: {}", categoriasDTO);
             LOGGER.debug("br.com.hbsis.Categorias Existente: {}", categoriasExistente);
-
 
             categoriasExistente.setCodCategoria(categoriasDTO.getCodCategoria());
             categoriasExistente.setNomeCategoria(categoriasDTO.getNomeCategoria());
@@ -107,7 +103,6 @@ public class CategoriasService {
         Export export = new Export();
 
         export.exportPadrao(new String[]{"id", "cod_categoria", "nome_categoria", "fornecedor04", "razão social", "cnpj"}, response, "exportCategoria");
-
 
         for (Categorias linha : ponteCategoria.findAll()) {
 
@@ -161,5 +156,4 @@ public class CategoriasService {
         return cod;
 
     }
-
 }

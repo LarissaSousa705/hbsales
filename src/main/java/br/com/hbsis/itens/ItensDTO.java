@@ -1,9 +1,5 @@
 package br.com.hbsis.itens;
 
-import br.com.hbsis.produtos.Produtos;
-
-import java.util.List;
-
 public class ItensDTO {
 
     private Long id;
@@ -18,9 +14,7 @@ public class ItensDTO {
         this.pedidos = pedidos;
     }
 
-    public ItensDTO() {
-
-    }
+    public ItensDTO() {}
 
     public static ItensDTO of(Itens itens){
         return new ItensDTO(

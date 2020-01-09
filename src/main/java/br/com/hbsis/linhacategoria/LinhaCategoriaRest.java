@@ -32,14 +32,6 @@ public class LinhaCategoriaRest {
 
       return this.linhaCategoriaService.save(linhaCategoriaDTO);
     }
-
-/*    @GetMapping
-    public  LinhaCategoriaDTO find(@PathVariable("Id") Long Id) {
-
-        LOGGER.info("Recebendo find by ID... id: [{}]", Id);
-
-        return this.linhaCategoriaService.findById(Id);
-    }*/
     @PutMapping("/{Id}")
     public LinhaCategoriaDTO udpate(@PathVariable("Id") Long Id, @RequestBody LinhaCategoriaDTO linhaCategoriaDTO) {
         LOGGER.info("Recebendo Update para br.com.hbsis.LinhasCategoria de ID: {}", Id);

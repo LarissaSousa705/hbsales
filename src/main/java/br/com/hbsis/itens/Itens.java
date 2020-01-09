@@ -4,7 +4,6 @@ import br.com.hbsis.pedidos.Pedidos;
 import br.com.hbsis.produtos.Produtos;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
 @Table(name = "seg_itens")

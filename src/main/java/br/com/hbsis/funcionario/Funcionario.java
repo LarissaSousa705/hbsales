@@ -2,7 +2,6 @@ package br.com.hbsis.funcionario;
 
 import javax.persistence.*;
 
-//mapeamento da entidade do banco de dados
 @Entity
 @Table(name = "seg_funcionario")
 public class Funcionario {

@@ -1,12 +1,6 @@
 package br.com.hbsis.produtos;
 
-import br.com.hbsis.fornecedor.Fornecedor;
-import br.com.hbsis.itens.Itens;
-import br.com.hbsis.linhacategoria.LinhaCategoria;
-import br.com.hbsis.pedidos.Pedidos;
-
 import java.util.Date;
-import java.util.List;
 
 public class ProdutosDTO {
     private Long id;

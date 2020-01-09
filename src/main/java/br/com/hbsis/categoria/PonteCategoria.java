@@ -92,7 +92,6 @@ public class PonteCategoria {
         throw new IllegalArgumentException(String.format("COD %s não existe", codCategoria));
     }
 
-
     public boolean existsById(Long id) {
        return this.iCategoriasRepository.existsById(id);
     }

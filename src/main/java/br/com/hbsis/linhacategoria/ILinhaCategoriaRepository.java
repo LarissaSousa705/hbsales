@@ -11,9 +11,6 @@ import java.util.Optional;
 public interface ILinhaCategoriaRepository extends JpaRepository<LinhaCategoria, Long> {
 
     boolean existsByCodLinhaCategoria(String codLinhaCategoria);
-
     Optional<LinhaCategoria> findByCodLinhaCategoria(String codLinhaCategoria);
-
-
 }
 

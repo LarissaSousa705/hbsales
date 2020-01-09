@@ -1,6 +1,5 @@
 package br.com.hbsis.pedidos;
 
-import br.com.hbsis.periodoVendas.PeriodoVendas;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -42,13 +41,17 @@ public class PontePedidos {
         throw new IllegalArgumentException(String.format("ID %s não encontrador", pedidos));
 
     }
+    public Pedidos findByIdP(Long id){
+        Optional<Pedidos> pedidosOptional = this.iPedidosRepository.findById(id);
+        if (pedidosOptional.isPresent()){
+            return pedidosOptional.get();
+        }
+        throw new IllegalArgumentException(String.format("Id não encontrado ou inválido", id));
+    }
 
     public List<Pedidos> findAll() {
-        return iPedidosRepository.findAll();
-    }
+        List<Pedidos> pedidosList = this.iPedidosRepository.findAll();
+        return pedidosList;
 
-    public Pedidos findByPeriodo(PeriodoVendas id) {
-        return iPedidosRepository.findByPeriodoVendas(id);
     }
-
 }

@@ -1,23 +1,20 @@
 package br.com.hbsis.periodoVendas;
 //regra de negocios
 
-import br.com.hbsis.export.Export;
-import br.com.hbsis.fornecedor.Fornecedor;
 import br.com.hbsis.fornecedor.PonteFornecedor;
-import br.com.hbsis.itens.Itens;
 import br.com.hbsis.itens.PonteItens;
 import br.com.hbsis.pedidos.Pedidos;
+import br.com.hbsis.pedidos.PedidosDTO;
 import br.com.hbsis.pedidos.PontePedidos;
 import br.com.hbsis.produtos.PonteProdutos;
 import org.apache.commons.lang.StringUtils;
-import org.apache.http.HttpResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletResponse;
-import javax.swing.text.MaskFormatter;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -56,7 +53,6 @@ public class PeriodoVendasService {
         periodoVendas.setDataRetirada(periodoVendasDTO.getDataRetirada());
         periodoVendas.setDescricao(periodoVendasDTO.getDescricao());
 
-
         periodoVendas = this.pontePeriodoVendas.save(periodoVendas);
         return PeriodoVendasDTO.of(periodoVendas);
     }
@@ -84,6 +80,11 @@ public class PeriodoVendasService {
         if (StringUtils.isEmpty(periodoVendasDTO.getPeriodoVendasFornecedor().toString())) {
         }
 
+
+        validacaoData(periodoVendasDTO);
+    }
+
+    public PeriodoVendasDTO validacaoData(PeriodoVendasDTO periodoVendasDTO){
         String datInicio = periodoVendasDTO.getDataInicio().toString();
         String datFim = periodoVendasDTO.getDataFim().toString();
         String idFornecedor = periodoVendasDTO.getPeriodoVendasFornecedor().toString();
@@ -109,6 +110,7 @@ public class PeriodoVendasService {
                 throw new IllegalArgumentException("Período de Vendas não podem ser criado com as datas de vigência anteriores a hoje");
             }
         }
+        return periodoVendasDTO;
     }
 
     public PeriodoVendasDTO update(PeriodoVendasDTO periodoVendasDTO, Long id) {
@@ -144,41 +146,31 @@ public class PeriodoVendasService {
         LOGGER.info("Executando delete para Periodo de Vendas de ID: [{}]", id);
         this.pontePeriodoVendas.deleteById(id);
     }
-
 /*
-    public void exportPeriodoFornecedor(HttpResponse response, Long id) throws Exception {
 
-        Export export = new Export();
-
-        export.exportPadrao(new String[]{"nomeProduto", "quantidade", "razao/cnpj"}, (HttpServletResponse) response, "exportPeriodoFornecedor");
-
+    public PeriodoVendasDTO updateEntrega(PeriodoVendasDTO periodoVendasDTO, Long id) {
         PeriodoVendas periodoVendas = pontePeriodoVendas.findByPeriodo(id);
-        if (){
+        LocalDate hoje = LocalDate.now();
+        LocalDate dataRetirada  = periodoVendas.getDataRetirada().toLocalDate();
+        List<Pedidos> pedidosList = pontePedidos.findAll();
+        PedidosDTO pedidosDTO = new PedidosDTO();
+        for (Pedidos pedidos : pedidosList) {
+            if (pedidos.getPeriodoVendas().getId().toString().equals(id.toString()))
+                if (pedidos.getStatus().equals("ativo")) {
+                    if (hoje.equals(dataRetirada)) {
+                        pedidos.setStatus("retirado");
 
-        }
-
-        for (Pedidos pedidos : pontePedidos.findAll()) {
-            for (Itens itens : ponteItens.findAll()){
-                String quantidade = itens.getQuantidade().toString();
-                String  nomeProduto = itens.getProdutos().getNomeProduto();
-
-                if (pedidos.getPeriodoVendas().toString().equals(id.toString())){
-
-                    MaskFormatter mask = new MaskFormatter("##.###.###/####-##");
-                    mask.setValueContainsLiteralCharacters(false);
-                    String cnpj = pedidos.getPeriodoVendas().getPeriodoVendasFornecedor().getCnpj();
-                    String cnpjPronto = mask.valueToString(cnpj);
-                    String razao = pedidos.getPeriodoVendas().getPeriodoVendasFornecedor().getRazao();
-
-                    String razaoCnpj = razao + " - " + cnpjPronto;
-
-                    export.exportPadrao(new String[]{nomeProduto, quantidade, razaoCnpj},
-                            (HttpServletResponse) response, "exportPeriodoFornecedor");
-
+                        update(PedidosDTO.of(pedidos), id);
+                    } else if (hoje.isAfter(dataRetirada)) {
+                        throw new IllegalArgumentException("Essa data de retirada já passou");
+                    }
+                } else {
+                    throw new IllegalArgumentException("Esse pedido não está ativo");
                 }
-            }
-
         }
-    }*/
+        return pedidosDTO;
+    }
+*/
+
 
 }

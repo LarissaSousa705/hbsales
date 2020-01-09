@@ -65,13 +65,5 @@ public class PonteProdutos {
         }
         throw new IllegalArgumentException(String.format("ID %s não encontrador", id));
     }
-    /*public Optional<Produtos> findById(Long id) {
-        Optional<Produtos> produtosOptional = this.iProdutosRepository.findById(id);
-        if (produtosOptional.isPresent()){
-            return produtosOptional;
-        }
-        throw new IllegalArgumentException(String.format("ID %s não encontrador", id));
-    }*/
-
 
 }

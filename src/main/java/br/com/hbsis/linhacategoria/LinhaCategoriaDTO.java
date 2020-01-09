@@ -26,8 +26,6 @@ public class LinhaCategoriaDTO {
                 linhaCategoria.getIdCategoriaProdutos().getId()
         );
     }
-
-
     public Long getId() {
         return Id;
     }
@@ -51,7 +49,6 @@ public class LinhaCategoriaDTO {
     public void setCategoriaLinha(String categoriaLinha) {
         this.categoriaLinha = categoriaLinha;
     }
-
 
     public Long getIdCategoriaProdutos() {
         return idCategoriaProdutos;

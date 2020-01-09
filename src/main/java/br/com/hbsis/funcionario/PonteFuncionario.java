@@ -18,16 +18,15 @@ public class PonteFuncionario {
 
     public Funcionario save(Funcionario funcionario) {
         funcionario = iFuncionarioRepository.save(funcionario);
-
         return funcionario;
     }
 
-    public Funcionario findByIdFun(Long id) {
+    public Funcionario findByIdFuncionario(Long id) {
         Optional<Funcionario> funcionarioOptional = this.iFuncionarioRepository.findById(id);
         if (funcionarioOptional.isPresent()){
             return funcionarioOptional.get();
         }
-        throw new IllegalArgumentException(String.format("ID %s não existe\", id"));
+        throw new IllegalArgumentException(String.format("ID %s não existe",id));
     }
 
     public void deleteById(Long id) {
@@ -40,6 +39,6 @@ public class PonteFuncionario {
         if (funcionarioOptional.isPresent()){
             return funcionarioOptional;
         }
-        throw new IllegalArgumentException(String.format("ID %s não existe\", id"));
+        throw new IllegalArgumentException(String.format("ID %s não existe",id));
     }
 }

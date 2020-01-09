@@ -10,7 +10,6 @@ public class CategoriasDTO {
     public CategoriasDTO(){
     }
 
-
     public CategoriasDTO(Long id, String nomeCategoria, String codCategoria, Long fornecedor04) {
         this.id = id;
         this.nomeCategoria = nomeCategoria;

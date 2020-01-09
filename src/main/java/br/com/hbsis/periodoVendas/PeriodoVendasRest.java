@@ -2,7 +2,6 @@ package br.com.hbsis.periodoVendas;
 //receber requisiçoes externas ao sistema
 
 
-import org.apache.http.HttpResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,9 +40,6 @@ public class PeriodoVendasRest {
 
         this.periodoVendasService.delete(id);
     }
-/*    @GetMapping("/export-csv-periodoFornecedor/{id}")
-    public void exportCSV(HttpResponse response, @PathVariable("id") Long id) throws Exception{
-        periodoVendasService.exportPeriodoFornecedor(response, id);
-    }*/
+
 
 }

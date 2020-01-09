@@ -13,16 +13,11 @@ public class LinhaCategoria {
     private Long Id;
     @Column(name = "cod_linha_categoria", unique = false, nullable = false, length = 10)
     private String codLinhaCategoria;
-    /*@Column(name = "nome_categoria", unique = false, nullable = false, length = 50)
-    private Categorias nomeCategoria;*/
     @Column(name = "categoria_linha", unique = false, nullable = false)
     private String categoriaLinha;
-
-
     @ManyToOne
     @JoinColumn(name = "id_categoria_produtos",referencedColumnName = "id")
     private Categorias idCategoriaProdutos;
-
 
     public Long getId() {
         return Id;

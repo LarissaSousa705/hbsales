@@ -1,15 +1,10 @@
 package br.com.hbsis.pedidos;
 
-import br.com.hbsis.funcionario.Funcionario;
-import br.com.hbsis.itens.Itens;
 import br.com.hbsis.itens.ItensDTO;
-import br.com.hbsis.periodoVendas.PeriodoVendas;
-import br.com.hbsis.produtos.ProdutosDTO;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class PedidosDTO {
 

@@ -5,7 +5,6 @@ import br.com.hbsis.fornecedor.Fornecedor;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-//mapeamento da entidade do banco de dados
 @Entity
 @Table(name = "seg_periodo_vendas")
 public class PeriodoVendas {
@@ -41,7 +40,6 @@ public class PeriodoVendas {
         this.dataInicio = dataInicio;
         return dataInicio;
     }
-
     public LocalDateTime getDataFim() {
         return dataFim;
     }

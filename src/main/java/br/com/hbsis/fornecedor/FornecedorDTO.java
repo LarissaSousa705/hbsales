@@ -10,9 +10,6 @@ public class FornecedorDTO {
     private String email;
     private String cnpj;
 
-
-
-
     public FornecedorDTO(Long id, String razao, String cnpj, String nomeFantasia, String endereco, String telefone, String email) {
         this.razao = razao;
         this.id = id;

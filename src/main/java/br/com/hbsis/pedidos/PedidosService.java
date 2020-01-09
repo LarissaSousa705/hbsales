@@ -2,29 +2,33 @@ package br.com.hbsis.pedidos;
 
 import br.com.hbsis.export.Export;
 import br.com.hbsis.fornecedor.Fornecedor;
+import br.com.hbsis.funcionario.Funcionario;
 import br.com.hbsis.funcionario.PonteFuncionario;
 import br.com.hbsis.itens.Itens;
 import br.com.hbsis.itens.ItensDTO;
 import br.com.hbsis.itens.PonteItens;
 import br.com.hbsis.periodoVendas.PeriodoVendas;
+import br.com.hbsis.periodoVendas.PeriodoVendasDTO;
 import br.com.hbsis.periodoVendas.PontePeriodoVendas;
 import br.com.hbsis.produtos.PonteProdutos;
 import br.com.hbsis.produtos.Produtos;
-import org.apache.commons.lang.StringUtils;
-
-import org.apache.http.HttpResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.swing.text.MaskFormatter;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 //regra de negocios
 @Service
@@ -35,13 +39,16 @@ public class PedidosService {
     private final PontePeriodoVendas pontePeriodoVendas;
     private final PonteItens ponteItens;
     private final PonteFuncionario ponteFuncionario;
+    private JavaMailSender javaMailSender;
 
-    public PedidosService(PontePedidos pontePedidos, PonteProdutos ponteProdutos, PontePeriodoVendas pontePeriodoVendas, PonteItens ponteItens, PonteFuncionario ponteFuncionario) {
+    @Autowired
+    public PedidosService(PontePedidos pontePedidos, PonteProdutos ponteProdutos, PontePeriodoVendas pontePeriodoVendas, PonteItens ponteItens, PonteFuncionario ponteFuncionario, JavaMailSender javaMailSender) {
         this.pontePedidos = pontePedidos;
         this.ponteProdutos = ponteProdutos;
         this.pontePeriodoVendas = pontePeriodoVendas;
         this.ponteItens = ponteItens;
         this.ponteFuncionario = ponteFuncionario;
+        this.javaMailSender = javaMailSender;
     }
 
 
@@ -54,10 +61,9 @@ public class PedidosService {
         pedidos.setId(pedidosDTO.getId());
         pedidos.setCodPedido(pedidosDTO.getCodPedido());
         pedidos.setStatus(pedidosDTO.getStatus());
-        pedidos.setFuncionario(ponteFuncionario.findByIdFun(pedidosDTO.getFuncionario()));
+        pedidos.setFuncionario(ponteFuncionario.findByIdFuncionario(pedidosDTO.getFuncionario()));
         pedidos.setPeriodoVendas(pontePeriodoVendas.findByPeriodo(pedidosDTO.getPeriodoVendas()));
         pedidos.setDataPedido(pedidosDTO.getDataPedido());
-
 
         if (validacaoAPI(pedidos.getPeriodoVendas().getPeriodoVendasFornecedor().getCnpj(), pedidos.getFuncionario().getUuidApi(),
                 convercaoItens(pedidosDTO.getItensDTOS(), pedidos), valorTotal(pedidosDTO.getItensDTOS()))) {
@@ -68,31 +74,22 @@ public class PedidosService {
             pedidos.setItensList(convercaoItens(pedidosDTO.getItensDTOS(), pedidos));
 
             for (Itens itens1 : pedidos.getItensList()) {
-
                 ponteItens.save(itens1);
                 itensList.add(itens1);
 
             }
+            this.email(pedidos, pedidos.getItensList());
         } else {
             throw new IllegalArgumentException("Erro na validção da API");
         }
         return PedidosDTO.of(pedidos);
     }
 
-
     private void validate(PedidosDTO pedidosDTO) {
         LOGGER.info("Validando Pedidos");
-        InvoiceDTO invoiceDTO = new InvoiceDTO();
 
         if (pedidosDTO == null) {
             throw new IllegalArgumentException("Pedidos não devem ser nulo");
-        }
-        if (StringUtils.isEmpty(pedidosDTO.getCodPedido())) {
-            throw new IllegalArgumentException("Codigo de pedidos não devem ser nulo");
-        }
-        if (StringUtils.isEmpty(pedidosDTO.getStatus())) {
-            throw new IllegalArgumentException("Status de pedidos não devem ser nulo");
-
         }
 
         switch (pedidosDTO.getStatus()) {
@@ -103,8 +100,6 @@ public class PedidosService {
             default:
                 throw new IllegalArgumentException("Status de pedido não pode ser diferente de: ativo, cancelado, retirado");
         }
-
-
         for (ItensDTO itensDTO : pedidosDTO.getItensDTOS()) {
             Fornecedor fornecedorCompleto;
             fornecedorCompleto = pontePeriodoVendas.findByPeriodo(pedidosDTO.getPeriodoVendas()).getPeriodoVendasFornecedor();
@@ -129,12 +124,11 @@ public class PedidosService {
         LocalDateTime dataFim1 = periodoVendasCompleto.getDataFim();
         LocalDateTime dataPedido = pedidosDTO.getDataPedido();
 
-
         if (periodoVendasCompleto.getId() == null) {
             throw new IllegalArgumentException("Esse período não existe");
-        } else if (!dataPedido.isAfter(dataInicio1)) {
+        } else if (!dataPedido.isAfter(dataInicio1) ||!dataPedido.equals(dataInicio1) ) {
             throw new IllegalArgumentException("Esse período ainda não começou...");
-        } else if (!dataPedido.isBefore(dataFim1)) {
+        } else if (!dataPedido.isBefore(dataFim1) || !dataPedido.equals(dataFim1)) {
             throw new IllegalArgumentException("Esse período já terminou...");
         }
     }
@@ -148,7 +142,6 @@ public class PedidosService {
         if (!idFornecedorP.equals(fornecedor.getId().toString())) {
             throw new IllegalArgumentException("Fornecedor dos produtos são diferentes");
         }
-
     }
 
     public PedidosDTO update(PedidosDTO pedidosDTO, Long id) {
@@ -164,11 +157,12 @@ public class PedidosService {
             pedidos.setId(pedidosDTO.getId());
             pedidos.setCodPedido(pedidosDTO.getCodPedido());
             pedidos.setStatus(pedidosDTO.getStatus());
-            pedidos.setFuncionario(ponteFuncionario.findByIdFun(pedidosDTO.getFuncionario()));
+            pedidos.setFuncionario(ponteFuncionario.findByIdFuncionario(pedidosDTO.getFuncionario()));
             pedidos.setPeriodoVendas(pontePeriodoVendas.findByPeriodo(pedidosDTO.getPeriodoVendas()));
             pedidos.setDataPedido(pedidosDTO.getDataPedido());
+            pedidos.setItensList(convercaoItens(pedidosDTO.getItensDTOS(), pedidos));
 
-            pedidos = this.pontePedidos.save(pedidos);
+            save(pedidosDTO);
             return PedidosDTO.of(pedidos);
         }
         throw new IllegalArgumentException(String.format("ID %s não existe", id));
@@ -221,9 +215,7 @@ public class PedidosService {
 
 
     public void exportPeriodoFornecedor(HttpServletResponse response, Long id) throws Exception {
-
         Export export = new Export();
-
 
         PeriodoVendas periodoVendas = pontePeriodoVendas.findByPeriodo(id);
         if (periodoVendas.getId().toString().equals(id.toString())) {
@@ -244,16 +236,152 @@ public class PedidosService {
 
                         String razaoCnpj = razao + " - " + cnpjPronto;
 
-
                         export.exportPadrao(new String[]{nomeProduto, quantidade, razaoCnpj},
                                 response, "export-csv-periodoFornecedor");
-
                     }
 
                 }
             }
         } else {
-            throw new IllegalArgumentException("Não");
+            throw new IllegalArgumentException("Período de vendas não encontrado");
         }
+    }
+
+    public List<PedidosDTO> pedidosFuncionario(Long id) {
+        Funcionario funcionario = ponteFuncionario.findByIdFuncionario(id);
+
+        List<Pedidos> listPedidos = pontePedidos.findAll();
+
+        List<PedidosDTO> listPedidosCerto = new ArrayList<>();
+        PedidosDTO pedidoDTO = new PedidosDTO();
+        for (Pedidos pedido : listPedidos) {
+
+            if (pedido.getFuncionario().getId().toString().equals(funcionario.getId().toString())) {
+                if (pedido.getStatus().equals("ativo")) {
+
+                    pedidoDTO.setCodPedido(pedido.getCodPedido());
+                    pedidoDTO.setDataPedido(pedido.getDataPedido());
+                    pedidoDTO.setFuncionario(pedido.getFuncionario().getId());
+                    pedidoDTO.setId(pedido.getId());
+                    pedidoDTO.setItensDTOS(convercaoItens(pedido.getItensList()));
+                    pedidoDTO.setStatus(pedido.getStatus());
+                    pedidoDTO.setPeriodoVendas(pedido.getPeriodoVendas().getId());
+
+                    listPedidosCerto.add(pedidoDTO);
+
+                } else if (pedido.getStatus().equals("retirado")) {
+                    pedidoDTO.setCodPedido(pedido.getCodPedido());
+                    pedidoDTO.setDataPedido(pedido.getDataPedido());
+                    pedidoDTO.setFuncionario(pedido.getFuncionario().getId());
+                    pedidoDTO.setId(pedido.getId());
+                    pedidoDTO.setItensDTOS(convercaoItens(pedido.getItensList()));
+                    pedidoDTO.setStatus(pedido.getStatus());
+                    pedidoDTO.setPeriodoVendas(pedido.getPeriodoVendas().getId());
+
+                    listPedidosCerto.add(pedidoDTO);
+                }
+            } else {
+                throw new IllegalArgumentException("Pedidos desse funcionário não encontrado");
+            }
+        }
+        return listPedidosCerto;
+    }
+
+    private List<ItensDTO> convercaoItens(List<Itens> itens) {
+        List<ItensDTO> itensDTOS = new ArrayList<>();
+
+        for (Itens itens2 : itens) {
+            ItensDTO itensDTO = new ItensDTO();
+
+            itensDTO.setQuantidade(itens2.getQuantidade());
+            itensDTOS.add(itensDTO);
+        }
+        return itensDTOS;
+    }
+
+    public PedidosDTO updateStatus(PedidosDTO pedidosDTO, Long id) {
+        Pedidos pedidos = pontePedidos.findByIdP(id);
+        LocalDateTime hoje = LocalDateTime.now();
+
+        if (pedidos.getStatus().equals("ativo")) {
+            if (hoje.isBefore(pedidos.getPeriodoVendas().getDataFim())) {
+                pedidos.setStatus(pedidosDTO.getStatus());
+                update(PedidosDTO.of(pedidos), id);
+            }
+        }
+        return pedidosDTO;
+    }
+
+    public PedidosDTO updateCompleto(PedidosDTO pedidosDTO, Long id) {
+        Pedidos pedidos = pontePedidos.findByIdP(id);
+        LocalDateTime hoje = LocalDateTime.now();
+
+        if (pedidos.getStatus().equals("ativo")) {
+            if (hoje.isBefore(pedidos.getPeriodoVendas().getDataFim())) {
+
+                pedidos.setStatus(pedidosDTO.getStatus());
+                pedidos.setDataPedido(pedidosDTO.getDataPedido());
+                pedidos.setCodPedido(pedidosDTO.getCodPedido());
+                pedidos.setFuncionario(ponteFuncionario.findByIdFuncionario(pedidosDTO.getFuncionario()));
+                pedidos.setPeriodoVendas(pontePeriodoVendas.findByPeriodo(pedidosDTO.getPeriodoVendas()));
+                pedidos.setItensList(convercaoItens(pedidosDTO.getItensDTOS(), pedidos));
+
+                update(PedidosDTO.of(pedidos), id);
+            }
+        }
+        return pedidosDTO;
+    }
+
+
+    public PedidosDTO updateEntrega(PedidosDTO pedidosDTO, Long id) {
+        PeriodoVendas periodoVendas = pontePeriodoVendas.findByPeriodo(id);
+        LocalDate hoje = LocalDate.now();
+        LocalDate dataRetirada  = periodoVendas.getDataRetirada().toLocalDate();
+        List<Pedidos> pedidosList = pontePedidos.findAll();
+        for (Pedidos pedidos : pedidosList) {
+            if (pedidos.getPeriodoVendas().getId().toString().equals(id.toString()))
+                if (pedidos.getStatus().equals("ativo")) {
+                    if (hoje.equals(dataRetirada)) {
+                        pedidos.setStatus("retirado");
+
+                        update(PedidosDTO.of(pedidos), pedidos.getId());
+                    } else if (hoje.isAfter(dataRetirada)) {
+                        throw new IllegalArgumentException("Essa data de retirada já passou");
+                    }
+                } else {
+                    throw new IllegalArgumentException("Esse pedido não está ativo");
+                }
+        }
+        return pedidosDTO;
+    }
+
+
+    public void email(Pedidos pedidos, List<Itens> itensList) {
+        SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+
+        simpleMailMessage.setSubject("Pedido realizado com sucesso!");
+        simpleMailMessage.setText(pedidos.getFuncionario().getNome() + "," + "você realizou a compra de: " + "\r\n"
+                + itensListMetodo(itensList) + "\r\n"
+                + "Data de retirada do pedido : " + pedidos.getPeriodoVendas().getDataRetirada()
+                + "\r\n" + "HBSIS - Soluções em TI" + "\r\n"
+                + "Rua Theodoro Holtrup, 982 - Vila Nova, Blumenau - SC"
+                + "(47) 2123-5400"
+
+        );
+        simpleMailMessage.setTo(pedidos.getFuncionario().getEmail());
+        simpleMailMessage.setFrom("larissaf.sousa17@gmail.com");
+        try {
+            javaMailSender.send(simpleMailMessage);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public ArrayList itensListMetodo(List<Itens> itensList) {
+        ArrayList<String> itens = new ArrayList<>();
+        for (Itens itens1 : itensList) {
+            itens.add("Produto " + itens1.getProdutos().getNomeProduto() + "\r\n" + "Quantidade " + itens1.getQuantidade() + "\r\n");
+        }
+        return itens;
     }
 }

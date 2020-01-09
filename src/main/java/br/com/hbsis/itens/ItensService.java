@@ -1,19 +1,12 @@
 package br.com.hbsis.itens;
 
-import br.com.hbsis.export.Export;
-import br.com.hbsis.fornecedor.Fornecedor;
-import br.com.hbsis.fornecedor.PonteFornecedor;
-import br.com.hbsis.pedidos.Pedidos;
 import br.com.hbsis.pedidos.PontePedidos;
-import br.com.hbsis.periodoVendas.PeriodoVendas;
 import br.com.hbsis.produtos.PonteProdutos;
 import org.apache.commons.lang.StringUtils;
-import org.apache.http.HttpResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletResponse;
 import java.util.Optional;
 
 @Service
@@ -23,13 +16,11 @@ public class ItensService {
     private final PonteItens ponteItens;
     private final PonteProdutos ponteProdutos;
     private final PontePedidos pontePedidos;
-    private final PonteFornecedor ponteFornecedor;
 
-    public ItensService(PonteItens ponteItens, PonteProdutos ponteProdutos, PontePedidos pontePedidos, PonteFornecedor ponteFornecedor) {
+    public ItensService(PonteItens ponteItens, PonteProdutos ponteProdutos, PontePedidos pontePedidos) {
         this.ponteItens = ponteItens;
         this.ponteProdutos = ponteProdutos;
         this.pontePedidos = pontePedidos;
-        this.ponteFornecedor = ponteFornecedor;
     }
 
     public ItensDTO save(ItensDTO itensDTO){
@@ -43,10 +34,8 @@ public class ItensService {
         itens.setQuantidade(itensDTO.getQuantidade());
         itens.setProdutos(ponteProdutos.findByIdProdutos(itensDTO.getProdutos()));
         itens.setPedidos(pontePedidos.findByIdPedido(itensDTO.getPedidos()));
-
         itens = this.ponteItens.save(itens);
         return  ItensDTO.of(itens);
-
     }
 
     private void validate(ItensDTO itensDTO) {
@@ -73,12 +62,10 @@ public class ItensService {
             LOGGER.debug("Payload {}", itensExistente);
             LOGGER.debug("br.com.hbsis.Itens Existente: {}", itensExistente);
 
-
             itensExistente.setId(itensDTO.getId());
             itensExistente.setQuantidade(itensDTO.getQuantidade());
             itensExistente.setProdutos(ponteProdutos.findByIdProdutos(itensDTO.getProdutos()));
             itensExistente.setPedidos(pontePedidos.findByIdPedido(itensDTO.getPedidos()));
-
 
             itensExistente = this.ponteItens.save(itensExistente);
 
@@ -90,6 +77,4 @@ public class ItensService {
         LOGGER.info("Executando delete para Itens de ID: [{}]", id);
         this.ponteItens.deleteById(id);
     }
-
-
 }

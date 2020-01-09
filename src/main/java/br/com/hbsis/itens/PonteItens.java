@@ -1,6 +1,5 @@
 package br.com.hbsis.itens;
 
-import br.com.hbsis.pedidos.Pedidos;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -28,17 +27,11 @@ public class PonteItens {
         }
         throw new IllegalArgumentException(String.format("ID %s não existe", id));
     }
-
     public void deleteById(Long id) {
         LOGGER.info("Executando delete para Categorias de ID: [{}]", id);
 
         this.iItensRepository.deleteById(id);
     }
-
-    public Itens findByPedido(Pedidos id) {
-        return iItensRepository.findByPedidos(id);
-    }
-
     public List<Itens> findAll() {
         return iItensRepository.findAll();
     }
