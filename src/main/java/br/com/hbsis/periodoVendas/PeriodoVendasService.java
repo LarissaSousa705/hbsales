@@ -2,20 +2,12 @@ package br.com.hbsis.periodoVendas;
 //regra de negocios
 
 import br.com.hbsis.fornecedor.PonteFornecedor;
-import br.com.hbsis.itens.PonteItens;
-import br.com.hbsis.pedidos.Pedidos;
-import br.com.hbsis.pedidos.PedidosDTO;
-import br.com.hbsis.pedidos.PontePedidos;
-import br.com.hbsis.produtos.PonteProdutos;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 
@@ -26,17 +18,9 @@ public class PeriodoVendasService {
 
     private final PontePeriodoVendas pontePeriodoVendas;
     private final PonteFornecedor ponteFornecedor;
-    private final PonteProdutos ponteProdutos;
-    private final PontePedidos pontePedidos;
-    private final PonteItens ponteItens;
-
-
-    public PeriodoVendasService(PontePeriodoVendas pontePeriodoVendas, PonteFornecedor ponteFornecedor, PonteProdutos ponteProdutos, PontePedidos pontePedidos, PonteItens ponteItens) {
+    public PeriodoVendasService(PontePeriodoVendas pontePeriodoVendas, PonteFornecedor ponteFornecedor) {
         this.pontePeriodoVendas = pontePeriodoVendas;
         this.ponteFornecedor = ponteFornecedor;
-        this.ponteProdutos = ponteProdutos;
-        this.pontePedidos = pontePedidos;
-        this.ponteItens = ponteItens;
     }
 
     public PeriodoVendasDTO save(PeriodoVendasDTO periodoVendasDTO) {
@@ -77,14 +61,11 @@ public class PeriodoVendasService {
             throw new IllegalArgumentException("Data de retirada de produto não deve ser null");
         }
 
-        if (StringUtils.isEmpty(periodoVendasDTO.getPeriodoVendasFornecedor().toString())) {
-        }
-
 
         validacaoData(periodoVendasDTO);
     }
 
-    public PeriodoVendasDTO validacaoData(PeriodoVendasDTO periodoVendasDTO){
+    private void validacaoData(PeriodoVendasDTO periodoVendasDTO){
         String datInicio = periodoVendasDTO.getDataInicio().toString();
         String datFim = periodoVendasDTO.getDataFim().toString();
         String idFornecedor = periodoVendasDTO.getPeriodoVendasFornecedor().toString();
@@ -101,16 +82,13 @@ public class PeriodoVendasService {
                 throw new IllegalArgumentException("Esta data de fim de período já existe...");
             }
         }
-        for (PeriodoVendas line2 : pontePeriodoVendas.findallF()) {
-            LocalDateTime datInicio3 = periodoVendasDTO.getDataInicio();
+        pontePeriodoVendas.findallF().stream().map(periodoVendas -> periodoVendasDTO.getDataInicio()).forEach(datInicio3 -> {
             String idFornecedor3 = periodoVendasDTO.getPeriodoVendasFornecedor().toString();
-
             LocalDateTime datHoje = LocalDateTime.now();
             if (datInicio3.isBefore(datHoje) && idFornecedor.equals(idFornecedor3) || datInicio3.isBefore(datHoje) && idFornecedor.equals(idFornecedor3)) {
                 throw new IllegalArgumentException("Período de Vendas não podem ser criado com as datas de vigência anteriores a hoje");
             }
-        }
-        return periodoVendasDTO;
+        });
     }
 
     public PeriodoVendasDTO update(PeriodoVendasDTO periodoVendasDTO, Long id) {
@@ -146,31 +124,4 @@ public class PeriodoVendasService {
         LOGGER.info("Executando delete para Periodo de Vendas de ID: [{}]", id);
         this.pontePeriodoVendas.deleteById(id);
     }
-/*
-
-    public PeriodoVendasDTO updateEntrega(PeriodoVendasDTO periodoVendasDTO, Long id) {
-        PeriodoVendas periodoVendas = pontePeriodoVendas.findByPeriodo(id);
-        LocalDate hoje = LocalDate.now();
-        LocalDate dataRetirada  = periodoVendas.getDataRetirada().toLocalDate();
-        List<Pedidos> pedidosList = pontePedidos.findAll();
-        PedidosDTO pedidosDTO = new PedidosDTO();
-        for (Pedidos pedidos : pedidosList) {
-            if (pedidos.getPeriodoVendas().getId().toString().equals(id.toString()))
-                if (pedidos.getStatus().equals("ativo")) {
-                    if (hoje.equals(dataRetirada)) {
-                        pedidos.setStatus("retirado");
-
-                        update(PedidosDTO.of(pedidos), id);
-                    } else if (hoje.isAfter(dataRetirada)) {
-                        throw new IllegalArgumentException("Essa data de retirada já passou");
-                    }
-                } else {
-                    throw new IllegalArgumentException("Esse pedido não está ativo");
-                }
-        }
-        return pedidosDTO;
-    }
-*/
-
-
 }
