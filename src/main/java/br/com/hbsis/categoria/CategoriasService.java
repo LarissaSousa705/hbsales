@@ -59,8 +59,7 @@ public class CategoriasService {
             String codPronto2 = "CAT" + cnpjPronto + codPronto(categoriasDTO.getCodCategoria());
             categorias.setCodCategoria(codPronto2);
         }
-        categorias.setCodCategoria(codCategoria);
-        categorias = this.ponteCategoria.save(categorias);
+        this.ponteCategoria.save(categorias);
 
         return CategoriasDTO.of(categorias);
     }
@@ -73,6 +72,12 @@ public class CategoriasService {
         }
         if (StringUtils.isEmpty(categoriasDTO.getNomeCategoria())) {
             throw new IllegalArgumentException("Nome da categoria não deve ser nulo/vazio");
+        }
+        if(StringUtils.isEmpty(categoriasDTO.getFornecedor().toString())){
+            throw new IllegalArgumentException("Fornecedor não deve ser nulo/vazio");
+        }
+        if(StringUtils.isEmpty(categoriasDTO.getCodCategoria())){
+            throw new IllegalArgumentException("Codigo da categoria não deve ser nulo/vazio");
         }
     }
 

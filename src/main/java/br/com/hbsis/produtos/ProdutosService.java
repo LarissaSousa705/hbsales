@@ -27,6 +27,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import sun.awt.SunHints;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.swing.text.MaskFormatter;
@@ -108,10 +109,28 @@ public class ProdutosService {
         }
 
         if (StringUtils.isEmpty(produtosDTO.getNomeProduto())) {
-            throw new IllegalArgumentException("Nome produto nâo devem ser nulo/vazio");
+            throw new IllegalArgumentException("Nome produto não devem ser nulo/vazio");
         }
         if (StringUtils.isEmpty(produtosDTO.getMedidaPeso())) {
-            throw new IllegalArgumentException("Medida de peso nâo devem ser nulo/vazio");
+            throw new IllegalArgumentException("Medida de peso não devem ser nulo/vazio");
+        }
+        if (StringUtils.isEmpty(String.valueOf(produtosDTO.getPesoUnidade()))) {
+            throw new IllegalArgumentException("Peso não devem ser nulo/vazio");
+        }
+        if (StringUtils.isEmpty(String.valueOf(produtosDTO.getLinhaCategoriaProduto()))) {
+            throw new IllegalArgumentException("Linha categoria não devem ser nulo/vazio");
+        }
+        if (StringUtils.isEmpty(String.valueOf(produtosDTO.getCodProduto()))) {
+            throw new IllegalArgumentException("Codigo do produto não devem ser nulo/vazio");
+        }
+        if (StringUtils.isEmpty(String.valueOf(produtosDTO.getIdFornecedor()))) {
+            throw new IllegalArgumentException("ID do fornecedor não devem ser nulo/vazio");
+        }
+        if (StringUtils.isEmpty(String.valueOf(produtosDTO.getPreco()))) {
+            throw new IllegalArgumentException("Preço não devem ser nulo/vazio");
+        }
+        if (StringUtils.isEmpty(String.valueOf(produtosDTO.getUnidadeCaixa()))) {
+            throw new IllegalArgumentException("Unidade por caixa não devem ser nulo/vazio");
         }
         switch (produtosDTO.getMedidaPeso()) {
             case "kg":
@@ -193,7 +212,6 @@ public class ProdutosService {
         }
     }
 
-
     public List<Produtos> importProduto(MultipartFile multipartFileImport) throws Exception {
         InputStreamReader inputStreamReaderImport = new InputStreamReader(multipartFileImport.getInputStream());
         CSVReader csvReader = new CSVReaderBuilder(inputStreamReaderImport).withSkipLines(1).build();
@@ -205,19 +223,19 @@ public class ProdutosService {
         for (String[] line : linhas) {
             try {
                 String[] line2 = line[0].replaceAll("\"", "").split(";");
-                Produtos classProdutos = new Produtos();
-                LinhaCategoria classLinhaCategoria = new LinhaCategoria();
-                Fornecedor classFornecedor = new Fornecedor();
-                Categorias classCategoria = new Categorias();
+                Produtos produtos = new Produtos();
+                LinhaCategoria linhaCategoria = new LinhaCategoria();
+                Fornecedor fornecedor = new Fornecedor();
+                Categorias categoria = new Categorias();
 
-                classProdutos.setNomeProduto(line2[2]);
-                classProdutos.setUnidadeCaixa(Long.parseLong(line2[4]));
-                classProdutos.setValidade(sdf.parse(sdf.format(simpleDateFormat1.parse(line2[6]))));
-                classLinhaCategoria.setCategoriaLinha(line2[8]);
-                classCategoria.setCodCategoria(line2[9]);
-                classCategoria.setNomeCategoria(line2[10]);
-                classFornecedor.setCnpj(line2[11]);
-                classFornecedor.setRazao(line2[12]);
+                produtos.setNomeProduto(line2[2]);
+                produtos.setUnidadeCaixa(Long.parseLong(line2[4]));
+                produtos.setValidade(sdf.parse(sdf.format(simpleDateFormat1.parse(line2[6]))));
+                linhaCategoria.setCategoriaLinha(line2[8]);
+                categoria.setCodCategoria(line2[9]);
+                categoria.setNomeCategoria(line2[10]);
+                fornecedor.setCnpj(line2[11]);
+                fornecedor.setRazao(line2[12]);
 
                 String preco2 = (line2[3]);
                 String peso = (line2[5]);
@@ -230,15 +248,15 @@ public class ProdutosService {
                 String c = preco2.replaceAll("[^0-9.]", "");
                 String d = codProduto.replaceAll("[^0-9]", "");
                 String e = codCategoriaLinha55.replaceAll("[^0-9]", "");
-                classLinhaCategoria = ponteLinhaCategoria.findByCodLinha(e);
+                linhaCategoria = ponteLinhaCategoria.findByCodLinha(e);
 
-                classProdutos.setPesoUnidade(Double.parseDouble(a));
-                classProdutos.setMedidaPeso(b);
-                classProdutos.setPreco(Double.parseDouble(c));
-                classProdutos.setCodProduto(d);
-                classProdutos.setLinhaCategoriaProduto(classLinhaCategoria);
+                produtos.setPesoUnidade(Double.parseDouble(a));
+                produtos.setMedidaPeso(b);
+                produtos.setPreco(Double.parseDouble(c));
+                produtos.setCodProduto(d);
+                produtos.setLinhaCategoriaProduto(linhaCategoria);
 
-                produtosList.add(classProdutos);
+                produtosList.add(produtos);
             } catch (Exception e) {
                 e.printStackTrace();
             }

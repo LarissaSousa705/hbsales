@@ -19,11 +19,7 @@ public class PontePeriodoVendas {
     }
 
     public List<PeriodoVendas> findAll() {
-        List<PeriodoVendas> periodoVendasList= this.iPeriodoVendasRepository.findAll();
-        if (periodoVendasList.isEmpty()){
-            return periodoVendasList;
-        }
-        throw new IllegalArgumentException("Período de Vendas não encontrado");
+        return this.iPeriodoVendasRepository.findAll();
     }
 
     public Optional<PeriodoVendas> findById(Long id) {
@@ -44,10 +40,6 @@ public class PontePeriodoVendas {
 
     public void deleteById(Long id) {
         this.iPeriodoVendasRepository.deleteById(id);
-    }
-
-    public List<PeriodoVendas> findallF() {
-        return iPeriodoVendasRepository.findAll();
     }
 
 }

@@ -52,11 +52,7 @@ public class PonteFornecedor {
     }
 
     public List<Fornecedor> findAll() {
-        List<Fornecedor> fornecedorList = this.iFornecedorRepository.findAll();
-        if (fornecedorList.isEmpty()){
-            return fornecedorList;
-        }
-       throw new IllegalArgumentException("Fornecedor não encontrado");
+        return this.iFornecedorRepository.findAll();
     }
 
 }

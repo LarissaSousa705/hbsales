@@ -23,6 +23,7 @@ public class PeriodoVendasService {
         this.ponteFornecedor = ponteFornecedor;
     }
 
+
     public PeriodoVendasDTO save(PeriodoVendasDTO periodoVendasDTO) {
         this.validate(periodoVendasDTO);
         LOGGER.info("Salvando periodo de vendas");
@@ -71,7 +72,7 @@ public class PeriodoVendasService {
         String idFornecedor = periodoVendasDTO.getPeriodoVendasFornecedor().toString();
 
 
-        for (PeriodoVendas line : pontePeriodoVendas.findallF()) {
+        for (PeriodoVendas line : pontePeriodoVendas.findAll()) {
             String datInicio2 = line.getDataInicio().toString();
             String datFim2 = line.getDataFim().toString();
             String periodoIdF = line.getPeriodoVendasFornecedor().getId().toString();
@@ -82,7 +83,7 @@ public class PeriodoVendasService {
                 throw new IllegalArgumentException("Esta data de fim de período já existe...");
             }
         }
-        pontePeriodoVendas.findallF().stream().map(periodoVendas -> periodoVendasDTO.getDataInicio()).forEach(datInicio3 -> {
+        pontePeriodoVendas.findAll().stream().map(periodoVendas -> periodoVendasDTO.getDataInicio()).forEach(datInicio3 -> {
             String idFornecedor3 = periodoVendasDTO.getPeriodoVendasFornecedor().toString();
             LocalDateTime datHoje = LocalDateTime.now();
             if (datInicio3.isBefore(datHoje) && idFornecedor.equals(idFornecedor3) || datInicio3.isBefore(datHoje) && idFornecedor.equals(idFornecedor3)) {

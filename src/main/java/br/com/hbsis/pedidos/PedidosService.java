@@ -8,7 +8,6 @@ import br.com.hbsis.itens.Itens;
 import br.com.hbsis.itens.ItensDTO;
 import br.com.hbsis.itens.PonteItens;
 import br.com.hbsis.periodoVendas.PeriodoVendas;
-import br.com.hbsis.periodoVendas.PeriodoVendasDTO;
 import br.com.hbsis.periodoVendas.PontePeriodoVendas;
 import br.com.hbsis.produtos.PonteProdutos;
 import br.com.hbsis.produtos.Produtos;

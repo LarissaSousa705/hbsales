@@ -47,11 +47,7 @@ public class PonteProdutos {
     }
 
     public List<Produtos> findAll() {
-        List<Produtos> produtos = this.iProdutosRepository.findAll();
-        if (produtos.isEmpty()){
-            return produtos;
-        }
-        throw new IllegalArgumentException("Produto não encontrado");
+       return this.iProdutosRepository.findAll();
     }
 
     public List<Produtos> saveAll(List<Produtos> produtosList) {

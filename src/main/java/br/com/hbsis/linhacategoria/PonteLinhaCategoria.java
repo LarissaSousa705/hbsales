@@ -38,11 +38,7 @@ public class PonteLinhaCategoria {
     }
 
     public List<LinhaCategoria> findAll() {
-        List<LinhaCategoria> linhaCategoriaList = this.iLinhaCategoriaRepository.findAll();
-        if (linhaCategoriaList.isEmpty()){
-            return linhaCategoriaList;
-        }
-        throw new IllegalArgumentException("Linha Categoria não encontrado ");
+        return this.iLinhaCategoriaRepository.findAll();
     }
 
 
@@ -51,11 +47,7 @@ public class PonteLinhaCategoria {
     }
 
     public List<LinhaCategoria> saveAll(List<LinhaCategoria> linhaCategorias) {
-        List<LinhaCategoria> linhaCategoriaList = this.iLinhaCategoriaRepository.saveAll(linhaCategorias);
-        if (linhaCategoriaList.isEmpty()){
-            return linhaCategoriaList;
-        }
-        throw new IllegalArgumentException("Linha Categoria não foi salvo... ");
+        return this.iLinhaCategoriaRepository.saveAll(linhaCategorias);
     }
 
     public LinhaCategoria findByIdLinhaCategoria(Long linhaCategoriaProduto) {

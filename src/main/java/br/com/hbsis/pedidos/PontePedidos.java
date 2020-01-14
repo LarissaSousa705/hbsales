@@ -50,8 +50,6 @@ public class PontePedidos {
     }
 
     public List<Pedidos> findAll() {
-        List<Pedidos> pedidosList = this.iPedidosRepository.findAll();
-        return pedidosList;
-
+        return this.iPedidosRepository.findAll();
     }
 }

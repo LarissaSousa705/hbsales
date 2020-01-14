@@ -55,18 +55,12 @@ public class PonteCategoria {
     }
 
     public Categorias save(Categorias categorias){
-        categorias = iCategoriasRepository.save(categorias);
-
-        return categorias;
+        return iCategoriasRepository.save(categorias);
     }
     public List<Categorias> findAll(){
-        List<Categorias> categoriasList = this.iCategoriasRepository.findAll();
+        return  this.iCategoriasRepository.findAll();
 
-        if (categoriasList.isEmpty()){
-            return categoriasList;
         }
-        throw new IllegalArgumentException("Categoria não encontrado ");
-    }
 
     public List<Categorias> saveAll(List<Categorias> categorias) {
         return iCategoriasRepository.saveAll(categorias);

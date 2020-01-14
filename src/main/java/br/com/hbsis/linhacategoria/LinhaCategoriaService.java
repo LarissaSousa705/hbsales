@@ -64,6 +64,12 @@ public class LinhaCategoriaService {
         if (StringUtils.isEmpty(linhaCategoriaDTO.getCategoriaLinha())) {
             throw new IllegalArgumentException("CategoriaLinha não deve ser nula/vazia");
         }
+        if (StringUtils.isEmpty(linhaCategoriaDTO.getCodLinhaCategoria())) {
+            throw new IllegalArgumentException("Codigo da linha categoria não deve ser nula/vazia");
+        }
+        if (StringUtils.isEmpty(linhaCategoriaDTO.getIdCategoriaProdutos().toString())) {
+            throw new IllegalArgumentException("ID da categoria não deve ser nula/vazia");
+        }
 
     }
 
